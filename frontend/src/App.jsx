@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/public/LandingPage';
 import LoginPage from './pages/auth/LoginPage';
 import Dashboard from './pages/dashboard/Dashboard';
@@ -6,7 +6,7 @@ import MainLayout from './layouts/MainLayout';
 
 function App() {
   return (
-    <Router basename="/Child-Care-/">
+    <Router>
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />

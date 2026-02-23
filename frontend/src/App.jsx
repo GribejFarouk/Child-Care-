@@ -6,7 +6,7 @@ import MainLayout from './layouts/MainLayout';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/Child-Care-/">
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />

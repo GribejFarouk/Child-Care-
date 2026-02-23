@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-primary-800 antialiased selection:bg-primary-100 selection:text-primary-700;
+    /* Apple-like smooth rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight text-primary-900;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/60 backdrop-blur-2xl border border-white/80 shadow-apple;
+  }
+  
+  .glass-panel-hover {
+    @apply hover:bg-white/90 hover:shadow-apple-hover hover:-translate-y-1 transition-all duration-500 ease-out;
+  }
+  
+  .bg-mesh-gradient {
+    background-color: #ffffff;
+    background-image: 
+      radial-gradient(at 40% 20%, hsla(210,100%,95%,1) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsla(210,100%,90%,1) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(210,100%,98%,1) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsla(210,100%,92%,1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(210,100%,96%,1) 0px, transparent 50%),
+      radial-gradient(at 80% 100%, hsla(210,100%,88%,1) 0px, transparent 50%),
+      radial-gradient(at 0% 0%, hsla(210,100%,94%,1) 0px, transparent 50%);
+  }
+}

@@ -20,7 +20,7 @@ export default function LandingPage() {
             <Link to="/login" className="text-sm text-gray-600 hover:text-primary-900 font-medium transition-colors">
               Se connecter
             </Link>
-            <Link to="/login" className="bg-primary-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-primary-600 transition-all shadow-sm hover:shadow-md">
+            <Link to="/signup" className="bg-primary-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-primary-600 transition-all shadow-sm hover:shadow-md">
               Commencer
             </Link>
           </div>
@@ -52,7 +52,7 @@ export default function LandingPage() {
           </motion.p>
           
           <motion.div variants={fadeUp} className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/login" className="w-full sm:w-auto flex items-center justify-center px-8 py-4 rounded-full text-lg font-medium text-white bg-primary-900 hover:bg-primary-800 transition-all shadow-apple hover:shadow-apple-hover hover:-translate-y-0.5">
+            <Link to="/signup" className="w-full sm:w-auto flex items-center justify-center px-8 py-4 rounded-full text-lg font-medium text-white bg-primary-900 hover:bg-primary-800 transition-all shadow-apple hover:shadow-apple-hover hover:-translate-y-0.5">
               Créer un compte gratuit
             </Link>
             <a href="#features" className="w-full sm:w-auto flex items-center justify-center px-8 py-4 rounded-full text-lg font-medium text-primary-900 bg-white border border-gray-200 hover:bg-gray-50 transition-all">

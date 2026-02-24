@@ -1,6 +1,6 @@
 import { Menu, Bell, User } from 'lucide-react';
 
-export default function TopBar({ onMenuClick }) {
+export default function TopBar({ onMenuClick, onNotImplemented }) {
   return (
     <header className="bg-white/70 backdrop-blur-2xl border-b border-gray-200/50 h-16 flex items-center justify-between px-4 md:px-6 sticky top-0 z-30">
       <div className="flex items-center">
@@ -14,13 +14,21 @@ export default function TopBar({ onMenuClick }) {
       </div>
 
       <div className="flex items-center space-x-4">
-        <button className="p-2 text-gray-400 hover:text-gray-600 relative transition-colors">
+        <button
+          type="button"
+          onClick={() => onNotImplemented?.('Notifications - Not Implemented')}
+          className="p-2 text-gray-400 hover:text-gray-600 relative transition-colors"
+        >
           <Bell size={20} />
           <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white" />
         </button>
-        <div className="h-8 w-8 rounded-full bg-primary-50 flex items-center justify-center text-primary-600 border border-primary-100 shadow-sm cursor-pointer hover:shadow-md transition-all">
+        <button
+          type="button"
+          onClick={() => onNotImplemented?.('Profil utilisateur - Not Implemented')}
+          className="h-8 w-8 rounded-full bg-primary-50 flex items-center justify-center text-primary-600 border border-primary-100 shadow-sm cursor-pointer hover:shadow-md transition-all"
+        >
           <User size={18} />
-        </div>
+        </button>
       </div>
     </header>
   );

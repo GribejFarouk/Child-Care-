@@ -8,6 +8,7 @@ import SectionHeader from '../../components/ui/SectionHeader';
 import AnimatedMetric from '../../components/ui/AnimatedMetric';
 import TrustBanner from '../../components/ui/TrustBanner';
 import { staggerContainer, fadeUp } from '../../utils/motionPresets';
+import { showNotImplementedToast } from '../../utils/toastBus';
 
 export default function Dashboard() {
   const [showDisclaimer, setShowDisclaimer] = useState(true);
@@ -75,7 +76,7 @@ export default function Dashboard() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {children.map((child) => (
-          <GlassCard key={child.id} onClick={() => console.log('Navigate to profile')}>
+          <GlassCard key={child.id} onClick={() => showNotImplementedToast(`Profil ${child.name} - Not Implemented`)}>
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h3 className="text-2xl font-bold text-primary-900">{child.name}</h3>
@@ -114,6 +115,8 @@ export default function Dashboard() {
 
         {/* Add Child Card */}
         <motion.button 
+          type="button"
+          onClick={() => showNotImplementedToast('Ajouter un profil - Not Implemented')}
           variants={fadeUp}
           className="glass-panel rounded-3xl p-6 flex flex-col items-center justify-center text-gray-400 hover:text-primary-600 hover:bg-white/80 hover:shadow-apple-hover transition-all duration-500 min-h-[240px] group border-dashed border-2 border-gray-300/50 w-full"
         >
@@ -128,7 +131,11 @@ export default function Dashboard() {
       <SectionHeader 
         title="Insights & Alertes" 
         action={
-          <button className="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">
+          <button
+            type="button"
+            onClick={() => showNotImplementedToast('Historique des alertes - Not Implemented')}
+            className="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+          >
             Voir l'historique
           </button>
         }

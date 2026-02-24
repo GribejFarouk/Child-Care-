@@ -1,8 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Users, Activity, Bell, Settings, X, Heart } from 'lucide-react';
 
-export default function Sidebar({ isOpen, setIsOpen }) {
+export default function Sidebar({ isOpen, setIsOpen, onNotImplemented }) {
   const location = useLocation();
+  const implementedPaths = ['/dashboard'];
 
   const navItems = [
     { name: 'Tableau de bord', path: '/dashboard', icon: Home },
@@ -45,20 +46,36 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
+            const isImplemented = implementedPaths.includes(item.path);
+            const sharedClassName = `flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all ${
+              isActive
+                ? 'bg-primary-50 text-primary-700 shadow-sm'
+                : 'text-gray-600 hover:bg-gray-50 hover:text-primary-900'
+            }`;
             
+            if (isImplemented) {
+              return (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={sharedClassName}
+                >
+                  <Icon className={`mr-3 h-5 w-5 ${isActive ? 'text-primary-500' : 'text-gray-400'}`} />
+                  {item.name}
+                </Link>
+              );
+            }
+
             return (
-              <Link
+              <button
                 key={item.name}
-                to={item.path}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all ${
-                  isActive 
-                    ? 'bg-primary-50 text-primary-700 shadow-sm' 
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-primary-900'
-                }`}
+                type="button"
+                onClick={() => onNotImplemented?.(`${item.name} - Not Implemented`) }
+                className={`${sharedClassName} w-full text-left`}
               >
                 <Icon className={`mr-3 h-5 w-5 ${isActive ? 'text-primary-500' : 'text-gray-400'}`} />
                 {item.name}
-              </Link>
+              </button>
             );
           })}
         </nav>

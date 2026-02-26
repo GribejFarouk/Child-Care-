@@ -9,20 +9,10 @@ import AnimatedMetric from '../../components/ui/AnimatedMetric';
 import TrustBanner from '../../components/ui/TrustBanner';
 import { staggerContainer, fadeUp } from '../../utils/motionPresets';
 import { showNotImplementedToast } from '../../utils/toastBus';
+import { currentUser, children, alerts, dashboardSummary } from '../../data/mockData';
 
 export default function Dashboard() {
   const [showDisclaimer, setShowDisclaimer] = useState(true);
-
-  // Mock Data
-  const children = [
-    { id: 1, name: 'Léo', age: '14 mois', weight: 10.2, height: 78, lastUpdate: 'Il y a 2 jours', trend: 'stable' },
-    { id: 2, name: 'Mia', age: '3 ans', weight: 14.5, height: 95, lastUpdate: 'Il y a 1 semaine', trend: 'attention' },
-  ];
-
-  const alerts = [
-    { id: 1, child: 'Léo', message: 'Rappel : Vaccin ROR prévu la semaine prochaine.', type: 'info', date: 'Aujourd\'hui' },
-    { id: 2, child: 'Mia', message: 'La courbe de poids montre un léger ralentissement.', type: 'warning', date: 'Hier' },
-  ];
 
   return (
     <motion.div 
@@ -36,7 +26,7 @@ export default function Dashboard() {
       {/* Hero Section */}
       <motion.div variants={fadeUp} className="mb-12">
         <h1 className="text-4xl font-bold text-primary-900 tracking-tight">
-          Bonjour, Sarah
+          Bonjour, {currentUser.firstName}
         </h1>
         <p className="text-lg text-gray-500 mt-2 font-medium">
           Voici le résumé de santé de vos enfants aujourd'hui.
@@ -47,21 +37,21 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <StatPill 
           label="Prochain Rendez-vous" 
-          value="12 Oct" 
+          value={dashboardSummary.nextAppointmentLabel}
           icon={Calendar} 
-          trend="Pédiatre" 
+          trend={dashboardSummary.nextAppointmentType}
           trendUp={true} 
         />
         <StatPill 
           label="Mesures Récentes" 
-          value="2" 
+          value={String(dashboardSummary.recentMeasurementsThisWeek)}
           icon={Activity} 
           trend="Cette semaine" 
           trendUp={true} 
         />
         <StatPill 
           label="Alertes Actives" 
-          value="1" 
+          value={String(dashboardSummary.activeAlerts)}
           icon={AlertTriangle} 
           trend="À vérifier" 
           trendUp={false} 

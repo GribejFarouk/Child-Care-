@@ -1,0 +1,63 @@
+@startuml seq_add_measurement
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 200
+
+title Diagramme de Séquence 2 — Saisie Manuelle de Mesure & Validation
+
+actor "Parent" as User
+participant "Interface React\n(Frontend)" as UI
+participant "Service de\nValidation" as Validator
+participant "Serveur API\n(Backend)" as API
+participant "Moteur d'Alertes" as AlertEngine
+database "Base de Données" as DB
+
+User -> UI : Clique sur FAB "+" ou\n"Ajouter une mesure"
+UI --> User : Affiche le formulaire de mesure\n(poids, taille, périmètre crânien, date)
+
+User -> UI : Remplit et soumet le formulaire
+
+UI -> Validator : Valide les données côté client
+Validator -> Validator : Vérifie :\n- Champs requis non vides\n- Poids > 0 et < 50 kg\n- Taille > 0 et < 200 cm\n- Date ≤ aujourd'hui
+
+alt Validation échouée
+    Validator --> UI : Liste des erreurs
+    UI --> User : Affiche les erreurs\n(champs en rouge + messages)
+else Validation réussie
+    Validator --> UI : Données valides
+
+    UI -> API : POST /api/children/{childId}/measurements\n{weight, height, headCirc, date, notes}
+    API -> API : Validation côté serveur\n(double vérification)
+    
+    alt Données invalides côté serveur
+        API --> UI : 422 Unprocessable Entity\n{errors: [...]}
+        UI --> User : Affiche les erreurs serveur
+    else Données valides
+        API -> DB : INSERT INTO measurements\n(child_id, weight, height, head_circ, date, notes)
+        DB --> API : Mesure enregistrée (id)
+        
+        == Vérification des seuils ==
+        
+        API -> AlertEngine : Vérifie les seuils OMS\n(percentiles P3, P97)
+        AlertEngine -> DB : SELECT mesures récentes\n+ standards OMS pour l'âge
+        DB --> AlertEngine : Historique + références
+        AlertEngine -> AlertEngine : Compare avec percentiles\nP3 et P97
+        
+        alt Mesure hors seuils (< P3 ou > P97)
+            AlertEngine -> DB : INSERT INTO alerts\n(type: "warning", child_id, message)
+            AlertEngine --> API : Alerte générée
+            API --> UI : 201 Created\n{measurement, alert}
+            UI --> User : ✅ Mesure enregistrée\n⚠️ Notification d'alerte affichée
+        else Mesure dans les normes
+            AlertEngine --> API : Aucune alerte
+            API --> UI : 201 Created\n{measurement}
+            UI --> User : ✅ "Mesure enregistrée avec succès"
+        end
+        
+        UI -> UI : Redirection vers le profil enfant\n(après 2 secondes)
+    end
+end
+
+@enduml

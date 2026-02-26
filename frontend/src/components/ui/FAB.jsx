@@ -2,9 +2,20 @@ import { Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { popIn } from '../../utils/motionPresets';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { children } from '../../data/mockData';
 
-export default function FAB({ onNotImplemented }) {
+export default function FAB() {
   const [showTooltip, setShowTooltip] = useState(false);
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    // Navigate to add measurement for the first child, or generic page
+    const firstChild = children[0];
+    if (firstChild) {
+      navigate(`/children/${firstChild.id}/measurements/add`);
+    }
+  };
 
   return (
     <motion.div
@@ -31,7 +42,7 @@ export default function FAB({ onNotImplemented }) {
 
       <button
         type="button"
-        onClick={() => onNotImplemented?.('Ajouter une mesure - Not Implemented')}
+        onClick={handleClick}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         className="relative bg-primary-500 text-white p-4 rounded-full shadow-glow hover:bg-primary-600 hover:shadow-glow-lg hover:-translate-y-1 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"

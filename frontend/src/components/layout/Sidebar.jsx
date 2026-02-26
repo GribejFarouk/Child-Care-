@@ -1,16 +1,18 @@
-import { Link, useLocation } from 'react-router-dom';
-import { Home, Users, Activity, Bell, Settings, X, Heart, LogOut } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Home, Users, Activity, Bell, Settings, X, Heart, LogOut, TrendingUp, Camera } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { currentUser } from '../../data/mockData';
 
-export default function Sidebar({ isOpen, setIsOpen, onNotImplemented }) {
+export default function Sidebar({ isOpen, setIsOpen }) {
   const location = useLocation();
-  const implementedPaths = ['/dashboard'];
+  const navigate = useNavigate();
 
   const navItems = [
     { name: 'Tableau de bord', path: '/dashboard', icon: Home },
     { name: 'Enfants', path: '/children', icon: Users },
+    { name: 'Courbes', path: '/growth', icon: TrendingUp },
     { name: 'Suivi Grossesse', path: '/pregnancy', icon: Activity },
+    { name: 'Import OCR', path: '/ocr', icon: Camera },
     { name: 'Alertes', path: '/alerts', icon: Bell },
     { name: 'Paramètres', path: '/settings', icon: Settings },
   ];
@@ -56,17 +58,18 @@ export default function Sidebar({ isOpen, setIsOpen, onNotImplemented }) {
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-            const isImplemented = implementedPaths.includes(item.path);
+            const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
 
-            const sharedClassName = `relative flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 ${isActive
-                ? 'bg-primary-50 text-primary-700'
-                : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
-              }`;
-
-            const content = (
-              <>
-                {/* Active indicator bar */}
+            return (
+              <Link
+                key={item.name}
+                to={item.path}
+                onClick={() => setIsOpen(false)}
+                className={`relative flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 ${isActive
+                    ? 'bg-primary-50 text-primary-700'
+                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
+                  }`}
+              >
                 {isActive && (
                   <motion.div
                     layoutId="sidebar-active"
@@ -76,26 +79,7 @@ export default function Sidebar({ isOpen, setIsOpen, onNotImplemented }) {
                 )}
                 <Icon className={`mr-3 h-[18px] w-[18px] transition-colors ${isActive ? 'text-primary-500' : 'text-gray-400'}`} />
                 {item.name}
-              </>
-            );
-
-            if (isImplemented) {
-              return (
-                <Link key={item.name} to={item.path} className={sharedClassName}>
-                  {content}
-                </Link>
-              );
-            }
-
-            return (
-              <button
-                key={item.name}
-                type="button"
-                onClick={() => onNotImplemented?.(`${item.name} - Not Implemented`)}
-                className={`${sharedClassName} w-full text-left`}
-              >
-                {content}
-              </button>
+              </Link>
             );
           })}
         </nav>
@@ -103,7 +87,7 @@ export default function Sidebar({ isOpen, setIsOpen, onNotImplemented }) {
         {/* ── User Section ── */}
         <div className="p-3 border-t border-gray-100">
           <div className="flex items-center p-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer group"
-            onClick={() => onNotImplemented?.('Profil utilisateur - Not Implemented')}>
+            onClick={() => navigate('/settings')}>
             <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-sm font-bold shadow-sm flex-shrink-0">
               {currentUser.firstName.charAt(0)}
             </div>

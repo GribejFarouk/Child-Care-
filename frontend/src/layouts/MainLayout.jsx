@@ -5,15 +5,10 @@ import Sidebar from '../components/layout/Sidebar';
 import TopBar from '../components/layout/TopBar';
 import FAB from '../components/ui/FAB';
 import ToastHost from '../components/ui/ToastHost';
-import { showNotImplementedToast } from '../utils/toastBus';
 import { pageTransition } from '../utils/motionPresets';
 
 export default function MainLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const handleNotImplemented = (message = 'Not Implemented') => {
-    showNotImplementedToast(message);
-  };
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden relative font-sans">
@@ -21,11 +16,11 @@ export default function MainLayout() {
       <div className="absolute inset-0 bg-mesh-gradient opacity-40 pointer-events-none" />
 
       {/* Sidebar */}
-      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} onNotImplemented={handleNotImplemented} />
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col w-full relative z-10">
-        <TopBar onMenuClick={() => setIsSidebarOpen(true)} onNotImplemented={handleNotImplemented} />
+        <TopBar onMenuClick={() => setIsSidebarOpen(true)} />
 
         <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12">
           {/* Page transition wrapper */}
@@ -41,7 +36,7 @@ export default function MainLayout() {
       </div>
 
       {/* Global Floating Action Button */}
-      <FAB onNotImplemented={handleNotImplemented} />
+      <FAB />
       <ToastHost />
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Activity, AlertTriangle, ChevronRight, Plus, Calendar, TrendingUp, HeartPulse, Sparkles, Sun, CloudSun, Moon } from 'lucide-react';
 import DisclaimerModal from '../../components/ui/DisclaimerModal';
@@ -8,7 +9,6 @@ import SectionHeader from '../../components/ui/SectionHeader';
 import AnimatedMetric from '../../components/ui/AnimatedMetric';
 import TrustBanner from '../../components/ui/TrustBanner';
 import { staggerContainer, fadeUp } from '../../utils/motionPresets';
-import { showNotImplementedToast } from '../../utils/toastBus';
 import { currentUser, children, alerts, dashboardSummary } from '../../data/mockData';
 
 /* Time-of-day greeting helper */
@@ -27,6 +27,7 @@ const severityConfig = {
 
 export default function Dashboard() {
   const [showDisclaimer, setShowDisclaimer] = useState(true);
+  const navigate = useNavigate();
   const { text: greetingText, Icon: GreetingIcon } = getGreeting();
 
   return (
@@ -87,7 +88,7 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
         {children.map((child) => (
-          <GlassCard key={child.id} onClick={() => showNotImplementedToast(`Profil ${child.name} - Not Implemented`)}>
+          <GlassCard key={child.id} onClick={() => navigate(`/children/${child.id}`)}>
             <div className="flex justify-between items-start mb-5">
               <div>
                 <h3 className="text-xl font-bold text-gray-900">{child.name}</h3>
@@ -135,7 +136,7 @@ export default function Dashboard() {
         {/* Add Child Card */}
         <motion.button
           type="button"
-          onClick={() => showNotImplementedToast('Ajouter un profil - Not Implemented')}
+          onClick={() => navigate('/children/add')}
           variants={fadeUp}
           className="glass-panel rounded-3xl p-6 flex flex-col items-center justify-center text-gray-400 hover:text-primary-500 hover:bg-white/80 hover:shadow-card-hover transition-all duration-500 min-h-[240px] group border-dashed border-2 border-gray-200 w-full"
         >
@@ -152,7 +153,7 @@ export default function Dashboard() {
         action={
           <button
             type="button"
-            onClick={() => showNotImplementedToast('Historique des alertes - Not Implemented')}
+            onClick={() => navigate('/alerts')}
             className="text-sm font-semibold text-primary-500 hover:text-primary-600 transition-colors"
           >
             Voir l'historique

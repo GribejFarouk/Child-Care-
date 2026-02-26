@@ -1,7 +1,9 @@
 import { Menu, Bell, Search, Hand } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { currentUser } from '../../data/mockData';
 
-export default function TopBar({ onMenuClick, onNotImplemented }) {
+export default function TopBar({ onMenuClick }) {
+  const navigate = useNavigate();
   /* Context-aware greeting */
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
@@ -27,7 +29,7 @@ export default function TopBar({ onMenuClick, onNotImplemented }) {
         {/* Search button */}
         <button
           type="button"
-          onClick={() => onNotImplemented?.('Recherche - Not Implemented')}
+          onClick={() => navigate('/children')}
           className="hidden sm:flex items-center gap-2 px-3 py-2 text-sm text-gray-400 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200/60 hover:border-gray-300 transition-all"
         >
           <Search size={16} />
@@ -38,7 +40,7 @@ export default function TopBar({ onMenuClick, onNotImplemented }) {
         {/* Notification bell */}
         <button
           type="button"
-          onClick={() => onNotImplemented?.('Notifications - Not Implemented')}
+          onClick={() => navigate('/alerts')}
           className="relative p-2.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all"
         >
           <Bell size={20} />
@@ -50,7 +52,7 @@ export default function TopBar({ onMenuClick, onNotImplemented }) {
         {/* User Avatar */}
         <button
           type="button"
-          onClick={() => onNotImplemented?.('Profil utilisateur - Not Implemented')}
+          onClick={() => navigate('/settings')}
           className="h-9 w-9 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-sm font-bold shadow-sm cursor-pointer hover:shadow-md hover:scale-105 transition-all"
         >
           {currentUser.firstName.charAt(0)}

@@ -1,0 +1,74 @@
+@startuml seq_health_alert
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 200
+
+title Diagramme de Séquence 5 — Génération et Consultation des Alertes Santé
+
+actor "Parent" as User
+participant "Interface React\n(Frontend)" as UI
+participant "Serveur API\n(Backend)" as API
+participant "Moteur d'Alertes" as AlertEngine
+participant "Service de\nNotifications" as Notif
+database "Base de Données" as DB
+
+== Déclenchement automatique (après ajout de mesure) ==
+
+API -> AlertEngine : Nouvelle mesure enregistrée\n{childId, weight, height, date}
+AlertEngine -> DB : SELECT standards OMS\nWHERE age = ? AND sex = ?
+DB --> AlertEngine : Percentiles de référence\n(P3, P50, P97)
+
+AlertEngine -> AlertEngine : Analyse :\n1. Poids < P3 ou > P97 ?\n2. Taille < P3 ou > P97 ?\n3. Variation brusque vs mesure précédente ?\n4. IMC hors normes ?
+
+alt Aucune anomalie détectée
+    AlertEngine --> API : Pas d'alerte nécessaire
+else Anomalie détectée (ex: poids < P3)
+    AlertEngine -> AlertEngine : Détermine la sévérité :\n- danger : hors P3/P97\n- warning : tendance préoccupante\n- info : rappel vaccination
+    
+    AlertEngine -> DB : INSERT INTO alerts\n(child_id, type, priority,\ntitle, message, date)
+    DB --> AlertEngine : Alerte créée (id)
+    
+    AlertEngine -> Notif : Envoie notification push
+    Notif --> User : 🔔 Notification :\n"Alerte poids pour {enfant}"
+end
+
+== Consultation des alertes ==
+
+User -> UI : Accède au Centre d'Alertes\n(via cloche ou sidebar)
+UI -> API : GET /api/alerts\n?read={all|true|false}&type={filter}
+API -> DB : SELECT * FROM alerts\nWHERE parent_id = ?\nORDER BY date DESC
+DB --> API : Liste des alertes
+API --> UI : 200 OK [{alerts}]
+
+UI --> User : Affiche la liste des alertes\n(icônes par type, badges de priorité,\nstatut lu/non-lu)
+
+== Interaction avec une alerte ==
+
+User -> UI : Clique sur une alerte
+UI -> API : PATCH /api/alerts/{id}\n{read: true}
+API -> DB : UPDATE alerts\nSET read = true\nWHERE id = ?
+DB --> API : OK
+API --> UI : 200 OK
+
+UI --> User : Alerte marquée comme lue\n(style visuel atténué)
+
+== Marquer toutes comme lues ==
+
+User -> UI : Clique "Tout marquer comme lu"
+UI -> API : PATCH /api/alerts/mark-all-read
+API -> DB : UPDATE alerts\nSET read = true\nWHERE parent_id = ?
+DB --> API : OK
+API --> UI : 200 OK
+UI --> User : Toutes les alertes\npassent en style "lu"
+
+note over UI, User
+    **Avertissement médical permanent :**
+    "Les alertes sont générées automatiquement
+    à titre informatif. Elles ne constituent pas
+    un diagnostic médical. En cas de doute,
+    consultez votre pédiatre."
+end note
+
+@enduml

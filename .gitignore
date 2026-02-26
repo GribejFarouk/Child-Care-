@@ -8,3 +8,6 @@ dist-ssr/
 .vscode/
 .idea/
 *.log
+
+# PlantUML JAR
+plantuml.jar

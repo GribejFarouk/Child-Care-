@@ -1,0 +1,60 @@
+@startuml seq_growth_chart
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 200
+
+title Diagramme de Séquence 4 — Génération des Courbes de Croissance
+
+actor "Parent" as User
+participant "Interface React\n(Frontend)" as UI
+participant "Serveur API\n(Backend)" as API
+participant "Service Standards\nOMS" as WHO
+database "Base de Données" as DB
+
+User -> UI : Accède à "Courbes de croissance"\n(via sidebar ou profil enfant)
+
+UI -> API : GET /api/children\n(liste des enfants)
+API -> DB : SELECT * FROM children\nWHERE parent_id = ?
+DB --> API : Liste des enfants
+API --> UI : 200 OK [{children}]
+UI --> User : Affiche le sélecteur d'enfant
+
+User -> UI : Sélectionne un enfant\net un type de mesure\n(Poids / Taille / Périmètre crânien)
+
+UI -> API : GET /api/children/{childId}/measurements\n?type={metric}
+API -> DB : SELECT * FROM measurements\nWHERE child_id = ?\nORDER BY date ASC
+DB --> API : Liste des mesures
+API --> UI : 200 OK [{measurements}]
+
+== Récupération des standards OMS ==
+
+UI -> API : GET /api/who-standards\n?sex={child.sex}&metric={metric}
+API -> WHO : Récupère les courbes de référence\n(P3, P50, P97)
+WHO --> API : Données percentiles\n[{age, p3, p50, p97}]
+API --> UI : 200 OK {percentiles}
+
+== Rendu du graphique ==
+
+UI -> UI : Fusionne les données :\n- Mesures de l'enfant\n- Courbes P3, P50, P97 OMS
+UI -> UI : Génère le graphique (Recharts)\n- AreaChart avec gradients\n- Zones P3-P97 colorées\n- Points de mesure de l'enfant
+
+UI --> User : Affiche la courbe de croissance\navec les percentiles OMS
+
+User -> UI : Survole un point de données
+UI --> User : Tooltip avec détails :\n(date, valeur, percentile estimé)
+
+== Navigation entre métriques ==
+
+User -> UI : Change de métrique\n(ex: Poids → Taille)
+UI -> UI : Recharge les données\ncorrespondantes
+UI --> User : Graphique mis à jour
+
+note over UI, User
+    **Avertissement médical affiché :**
+    "Les courbes OMS sont des références statistiques.
+    Consultez votre pédiatre pour toute interprétation."
+end note
+
+@enduml

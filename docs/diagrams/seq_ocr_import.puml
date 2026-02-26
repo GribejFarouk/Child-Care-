@@ -1,0 +1,64 @@
+@startuml seq_ocr_import
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 200
+
+title Diagramme de Séquence 3 — Importation de Mesures par OCR
+
+actor "Parent" as User
+participant "Interface React\n(Frontend)" as UI
+participant "Serveur API\n(Backend)" as API
+participant "Service OCR\n(Tesseract / Cloud)" as OCR
+participant "Moteur d'Alertes" as AlertEngine
+database "Base de Données" as DB
+
+User -> UI : Accède à la page "Import OCR"
+UI --> User : Affiche la zone de glisser-déposer\n(drag & drop)
+
+User -> UI : Dépose ou sélectionne une image\n(photo carnet de santé)
+UI -> UI : Prévisualisation de l'image\nVérifie le format (JPG/PNG, < 5MB)
+
+alt Format invalide ou taille excessive
+    UI --> User : Erreur : "Format non supporté"\nou "Fichier trop volumineux"
+else Format valide
+    UI -> API : POST /api/ocr/extract\n{image: base64/multipart}
+    UI --> User : Affiche "Analyse en cours..."\n(spinner + barre de progression)
+    
+    API -> OCR : Envoie l'image pour extraction
+    OCR -> OCR : Prétraitement de l'image\n(contraste, rotation, débruitage)
+    OCR -> OCR : Extraction du texte (OCR)
+    OCR -> OCR : Analyse et extraction structurée\n(regex: poids, taille, date)
+    
+    alt OCR échoué (image illisible)
+        OCR --> API : Erreur d'extraction
+        API --> UI : 422 {error: "Impossible de lire l'image"}
+        UI --> User : ❌ "L'image n'a pas pu être analysée.\nEssayez avec une photo plus nette."
+    else OCR réussi
+        OCR --> API : Données extraites\n{weight, height, date, confidence}
+        API --> UI : 200 OK\n{extractedData, confidence}
+        
+        UI --> User : Affiche les données extraites\n(champs éditables pour vérification)
+        
+        == Vérification par l'utilisateur ==
+        
+        User -> UI : Vérifie, corrige si nécessaire,\net sélectionne l'enfant
+        User -> UI : Confirme "Enregistrer"
+        
+        UI -> API : POST /api/children/{childId}/measurements\n{weight, height, date, source: "ocr"}
+        API -> DB : INSERT INTO measurements\n(child_id, ..., source: "ocr")
+        DB --> API : Mesure enregistrée
+        
+        API -> AlertEngine : Vérifie les seuils OMS
+        AlertEngine --> API : Résultat (alerte ou non)
+        
+        API -> DB : INSERT INTO ocr_history\n(image_ref, extracted_data, child_id)
+        DB --> API : Historique OCR enregistré
+        
+        API --> UI : 201 Created\n{measurement, ocrRecord}
+        UI --> User : ✅ "Mesure importée avec succès"\n+ résumé des données enregistrées
+    end
+end
+
+@enduml

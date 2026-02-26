@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Info } from 'lucide-react';
 import { APP_TOAST_EVENT } from '../../utils/toastBus';
 
 export default function ToastHost() {
@@ -32,16 +34,23 @@ export default function ToastHost() {
   }, []);
 
   return (
-    <div
-      className={`fixed left-1/2 bottom-6 -translate-x-1/2 z-[120] transition-all duration-300 ${
-        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
-      }`}
-      role="status"
-      aria-live="polite"
-    >
-      <div className="rounded-full bg-primary-900 text-white px-5 py-2.5 text-sm font-medium shadow-apple border border-primary-800/30">
-        {message}
-      </div>
-    </div>
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          className="fixed left-1/2 bottom-6 z-[120]"
+          initial={{ opacity: 0, y: 16, x: '-50%' }}
+          animate={{ opacity: 1, y: 0, x: '-50%' }}
+          exit={{ opacity: 0, y: 8, x: '-50%' }}
+          transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-center gap-2.5 rounded-full bg-gray-900 text-white px-5 py-2.5 text-sm font-medium shadow-xl border border-gray-700/30 backdrop-blur-sm">
+            <Info size={16} className="text-gray-400 flex-shrink-0" />
+            {message}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

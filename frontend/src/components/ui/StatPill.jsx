@@ -3,22 +3,25 @@ import { fadeUp } from '../../utils/motionPresets';
 
 export default function StatPill({ label, value, icon: Icon, trend, trendUp }) {
   return (
-    <motion.div 
+    <motion.div
       variants={fadeUp}
-      className="glass-panel rounded-3xl p-5 flex items-center justify-between"
+      whileHover={{ y: -2, transition: { duration: 0.2 } }}
+      className="glass-panel rounded-2xl p-5 flex items-center justify-between relative overflow-hidden group"
     >
-      <div className="flex items-center space-x-4">
-        <div className="h-12 w-12 rounded-2xl bg-primary-50 flex items-center justify-center text-primary-600 shadow-sm border border-primary-100">
-          <Icon size={24} strokeWidth={1.5} />
+      {/* Decorative subtle gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-primary-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+      <div className="flex items-center space-x-4 relative z-10">
+        <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center text-primary-500 border border-primary-100/50">
+          <Icon size={22} strokeWidth={1.5} />
         </div>
         <div>
-          <p className="text-sm font-medium text-gray-500 tracking-wide uppercase">{label}</p>
-          <div className="flex items-baseline space-x-2 mt-1">
-            <h3 className="text-2xl font-bold text-primary-900">{value}</h3>
+          <p className="text-xs font-semibold text-gray-400 tracking-wider uppercase">{label}</p>
+          <div className="flex items-baseline space-x-2 mt-0.5">
+            <h3 className="text-xl font-bold text-gray-900">{value}</h3>
             {trend && (
-              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                trendUp ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
-              }`}>
+              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${trendUp ? 'bg-success-50 text-success-600' : 'bg-danger-50 text-danger-600'
+                }`}>
                 {trend}
               </span>
             )}

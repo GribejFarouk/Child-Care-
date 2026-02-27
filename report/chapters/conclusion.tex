@@ -1,0 +1,35 @@
+% ============================================================================
+% Conclusion Générale et Perspectives
+% ============================================================================
+\chapter*{Conclusion Générale et Perspectives}
+\addcontentsline{toc}{chapter}{Conclusion Générale et Perspectives}
+\markboth{Conclusion Générale et Perspectives}{Conclusion Générale et Perspectives}
+
+Le présent projet de fin d'études avait pour objectif la conception et le développement de \textbf{ChildCare+}, une plateforme numérique de suivi de la santé infantile destinée aux parents tunisiens.
+
+Au terme de la Phase~1 de développement, nous avons réalisé les livrables suivants :
+
+\begin{itemize}
+    \item Une \textbf{analyse complète des besoins} identifiant 27 besoins fonctionnels répartis en 8 modules et 7 besoins non fonctionnels.
+    \item Une \textbf{conception détaillée} de l'architecture microservices à 7 services, du modèle conceptuel de données et de 5 diagrammes de séquence UML.
+    \item Un \textbf{frontend complet et fonctionnel} comprenant 14 pages, 8 composants UI réutilisables et 12 jeux de données simulées, développé avec React.js, Tailwind CSS et Recharts.
+    \item Un \textbf{déploiement continu} sur GitHub Pages, rendant l'application accessible en ligne.
+\end{itemize}
+
+L'application respecte les principes fondamentaux définis en début de projet : elle ne se substitue jamais à un avis médical (chaque alerte recommande une consultation), elle intègre les normes de croissance de l'OMS et elle offre une interface intuitive adaptée aux parents non techniques.
+
+\vspace{0.5cm}
+\textbf{Perspectives et travaux futurs :}
+
+Les phases suivantes du projet prévoient :
+
+\begin{enumerate}
+    \item \textbf{Développement du backend microservices :} implémentation des services Auth, Profile et Measurements en Django + DRF avec bases de données PostgreSQL et authentification JWT.
+    \item \textbf{Moteur d'alertes :} développement de l'Analytics Service avec un moteur de règles comparant les mesures aux seuils OMS en temps réel.
+    \item \textbf{Intégration OCR :} mise en place du service d'extraction optique de caractères pour la numérisation automatique de documents médicaux.
+    \item \textbf{Conteneurisation :} orchestration de l'ensemble des services via Docker Compose avec un API Gateway Nginx.
+    \item \textbf{Service IA :} développement d'un modèle prédictif d'anomalies de croissance et d'un système de recommandations nutritionnelles.
+    \item \textbf{Tests et validation :} mise en place de tests unitaires, d'intégration et de tests utilisateurs.
+\end{enumerate}
+
+Ce projet nous a permis de mettre en pratique les connaissances acquises tout au long de notre formation en génie logiciel : méthodologie Scrum, conception UML, développement web moderne, et gestion de projet. Il nous a également sensibilisés aux enjeux de la santé numérique et à l'importance de la rigueur dans le traitement des données médicales.

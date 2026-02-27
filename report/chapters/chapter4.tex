@@ -1,0 +1,409 @@
+% ============================================================================
+% Chapitre 4 — Réalisation
+% ============================================================================
+\chapter{Réalisation}
+\label{chap:realisation}
+
+\section*{Introduction}
+Ce chapitre présente la phase de réalisation du projet ChildCare+. Nous décrivons l'environnement de développement, les technologies utilisées, l'organisation du code source, puis nous présentons les interfaces développées dans le cadre de la Phase~1 (MVP frontend). Enfin, nous dressons un bilan de l'état d'avancement actuel du projet.
+
+\textbf{Note de transparence :} ce chapitre documente exclusivement ce qui a été effectivement développé et déployé à la date de rédaction. Le backend microservices (Django, PostgreSQL) n'a pas encore été implémenté ; le frontend fonctionne actuellement avec des données simulées (\textit{mock data}).
+
+% -------------------------------------------------------------------
+\section{Environnement de développement}
+\label{sec:environnement}
+
+\subsection{Environnement matériel}
+
+Le développement a été réalisé sur la configuration matérielle suivante :
+
+\begin{table}[htbp]
+\centering
+\caption{Environnement matériel de développement}
+\label{tab:env-materiel}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Composant} & \textbf{Spécification} \\
+\hline
+Système d'exploitation & Windows 10/11 \\
+Processeur & [À COMPLÉTER] \\
+Mémoire RAM & [À COMPLÉTER] \\
+Stockage & [À COMPLÉTER] \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Environnement logiciel}
+
+\begin{table}[htbp]
+\centering
+\caption{Outils et technologies utilisés}
+\label{tab:env-logiciel}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Outil / Technologie} & \textbf{Version} & \textbf{Rôle} \\
+\hline
+Visual Studio Code & Dernière version & Éditeur de code principal \\
+Node.js & 18+ & Environnement d'exécution JavaScript \\
+Git & 2.x & Gestion de versions \\
+GitHub & --- & Hébergement du dépôt et déploiement (GitHub Pages) \\
+\hline
+\end{tabularx}
+\end{table}
+
+% -------------------------------------------------------------------
+\section{Technologies frontend}
+\label{sec:technologies}
+
+Le frontend de ChildCare+ est construit avec un ensemble de technologies modernes, détaillées dans le tableau~\ref{tab:tech-frontend}.
+
+\begin{table}[htbp]
+\centering
+\caption{Stack technologique frontend}
+\label{tab:tech-frontend}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Technologie} & \textbf{Version} & \textbf{Rôle} \\
+\hline
+React.js & 18.2.0 & Bibliothèque de composants UI (approche déclarative) \\
+Vite & 5.2.0 & Outil de build rapide avec remplacement de modules à chaud (HMR) \\
+Tailwind CSS & 3.4.1 & Framework CSS utilitaire pour un styling rapide et cohérent \\
+React Router DOM & 6.22.3 & Routage côté client avec HashRouter \\
+Recharts & 3.7.0 & Bibliothèque de graphiques React (courbes de croissance) \\
+Framer Motion & 12.34.3 & Animations fluides et transitions de pages \\
+Lucide React & 0.344.0 & Bibliothèque d'icônes SVG cohérentes \\
+gh-pages & 6.3.0 & Déploiement automatisé sur GitHub Pages \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Optimisation du build}
+
+La configuration Vite inclut un découpage manuel des modules (\textit{code splitting}) pour optimiser les performances de chargement :
+
+\begin{itemize}
+    \item \textbf{vendor} : React, React DOM, React Router (bibliothèques principales)
+    \item \textbf{charts} : Recharts (chargé uniquement sur les pages de graphiques)
+    \item \textbf{motion} : Framer Motion (animations)
+\end{itemize}
+
+Ce découpage garantit que chaque \textit{chunk} reste sous le seuil de 350~Ko, évitant les avertissements de taille de bundle.
+
+% -------------------------------------------------------------------
+\section{Organisation du code source}
+\label{sec:organisation-code}
+
+Le code source du frontend suit une organisation modulaire respectant les conventions React :
+
+\begin{verbatim}
+frontend/src/
+├── App.jsx                  # Routes et structure principale
+├── main.jsx                 # Point d'entrée React
+├── index.css                # Configuration Tailwind CSS
+│
+├── components/
+│   ├── layout/
+│   │   ├── Sidebar.jsx      # Navigation latérale responsive
+│   │   └── TopBar.jsx       # Barre supérieure avec recherche
+│   └── ui/
+│       ├── AnimatedMetric.jsx    # Compteur animé
+│       ├── DisclaimerModal.jsx   # Modale d'avertissement médical
+│       ├── FAB.jsx               # Bouton d'action flottant
+│       ├── GlassCard.jsx         # Carte avec effet glassmorphism
+│       ├── SectionHeader.jsx     # En-tête de section réutilisable
+│       ├── StatPill.jsx          # Pastille de statistique
+│       ├── ToastHost.jsx         # Système de notifications toast
+│       └── TrustBanner.jsx       # Bandeau de confiance médicale
+│
+├── layouts/
+│   └── MainLayout.jsx       # Layout avec sidebar + topbar
+│
+├── pages/
+│   ├── public/
+│   │   └── LandingPage.jsx
+│   ├── auth/
+│   │   ├── LoginPage.jsx
+│   │   ├── SignupPage.jsx
+│   │   └── ForgotPasswordPage.jsx
+│   ├── dashboard/
+│   │   └── Dashboard.jsx
+│   ├── children/
+│   │   ├── ChildrenListPage.jsx
+│   │   ├── ChildDetailPage.jsx
+│   │   └── ChildFormPage.jsx
+│   ├── measurements/
+│   │   └── MeasurementFormPage.jsx
+│   ├── pregnancy/
+│   │   └── PregnancyTrackerPage.jsx
+│   ├── growth/
+│   │   └── GrowthChartsPage.jsx
+│   ├── alerts/
+│   │   └── AlertsCenterPage.jsx
+│   ├── ocr/
+│   │   └── OcrImportPage.jsx
+│   └── settings/
+│       └── SettingsPage.jsx
+│
+├── data/
+│   └── mockData.js          # 12 exports de données simulées
+│
+└── utils/
+    ├── motionPresets.js      # Presets d'animation réutilisables
+    └── toastBus.js           # Bus d'événements pour les toasts
+\end{verbatim}
+
+% -------------------------------------------------------------------
+\section{Données simulées (\textit{mock data})}
+\label{sec:mock-data}
+
+En l'absence du backend, l'application utilise des données simulées définies dans un module centralisé \texttt{mockData.js}. Ce module exporte 12 jeux de données :
+
+\begin{table}[htbp]
+\centering
+\caption{Exports du module de données simulées}
+\label{tab:mock-data}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Export} & \textbf{Description} \\
+\hline
+\texttt{currentUser} & Profil du parent connecté (données fictives avec noms tunisiens) \\
+\texttt{children} & Liste de profils enfants de test \\
+\texttt{measurements} & Historique de mesures pour chaque enfant \\
+\texttt{growthData} & Données de croissance formatées pour les graphiques \\
+\texttt{whoReferenceBoys} & Données de référence OMS pour garçons (percentiles) \\
+\texttt{whoReferenceGirls} & Données de référence OMS pour filles (percentiles) \\
+\texttt{appointments} & Rendez-vous médicaux planifiés \\
+\texttt{alerts} & Alertes de santé simulées \\
+\texttt{pregnancyData} & Données de suivi de grossesse semaine par semaine \\
+\texttt{vaccinations} & Calendrier vaccinal et statuts \\
+\texttt{userSettings} & Préférences utilisateur \\
+\texttt{ocrHistory} & Historique des imports OCR \\
+\hline
+\end{tabularx}
+\end{table}
+
+Cette approche permet de développer et tester l'intégralité du frontend de manière indépendante, facilitant la future connexion au backend par simple remplacement des imports de données par des appels API Axios.
+
+% -------------------------------------------------------------------
+\section{Interfaces réalisées}
+\label{sec:interfaces}
+
+Cette section présente les principales interfaces développées dans le cadre de la Phase~1. Chaque interface est accompagnée d'une capture d'écran et d'une description fonctionnelle.
+
+\subsection{Page d'accueil (\textit{Landing Page})}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.85\textwidth]{figures/screenshot_landing.png}
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}\textit{[Capture d'écran : Page d'accueil]}\vspace{3cm}}}
+\caption{Page d'accueil de ChildCare+}
+\label{fig:landing}
+\end{figure}
+
+La page d'accueil présente le projet avec un design moderne utilisant des effets de \textit{glassmorphism}. Elle comprend une section héroïque avec un appel à l'action, un bandeau de confiance (\textit{TrustBanner}) mettant en avant les normes OMS, et des sections présentant les fonctionnalités clés.
+
+\subsection{Authentification}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.85\textwidth]{figures/screenshot_login.png}
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}\textit{[Capture d'écran : Page de connexion]}\vspace{3cm}}}
+\caption{Page de connexion}
+\label{fig:login}
+\end{figure}
+
+Le module d'authentification comprend trois pages :
+\begin{itemize}
+    \item \textbf{Connexion :} formulaire avec e-mail et mot de passe, validation côté client, lien vers l'inscription et la récupération de mot de passe.
+    \item \textbf{Inscription :} formulaire avec nom complet, e-mail, mot de passe et confirmation, indicateur de force du mot de passe.
+    \item \textbf{Mot de passe oublié :} formulaire de saisie d'e-mail avec confirmation visuelle de l'envoi du lien de réinitialisation.
+\end{itemize}
+
+\textit{Note : l'authentification est actuellement simulée (pas de backend). La connexion redirige directement vers le tableau de bord.}
+
+\subsection{Tableau de bord (\textit{Dashboard})}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.85\textwidth]{figures/screenshot_dashboard.png}
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}\textit{[Capture d'écran : Tableau de bord]}\vspace{3cm}}}
+\caption{Tableau de bord principal}
+\label{fig:dashboard}
+\end{figure}
+
+Le tableau de bord est la page centrale de l'application après connexion. Il affiche :
+\begin{itemize}
+    \item Un message d'accueil personnalisé avec le prénom du parent.
+    \item Des statistiques animées (\texttt{AnimatedMetric}) : nombre d'enfants, mesures totales, prochains rendez-vous.
+    \item Les cartes de profils enfants avec accès rapide au détail.
+    \item Les alertes récentes avec code couleur par sévérité.
+    \item Un \textit{disclaimer} médical sous forme de modale (\texttt{DisclaimerModal}) affiché au premier accès.
+\end{itemize}
+
+\subsection{Gestion des profils enfants}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.85\textwidth]{figures/screenshot_children.png}
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}\textit{[Capture d'écran : Liste des enfants]}\vspace{3cm}}}
+\caption{Liste des profils enfants}
+\label{fig:children}
+\end{figure}
+
+Ce module comprend trois pages :
+\begin{itemize}
+    \item \textbf{Liste des enfants (\texttt{ChildrenListPage})} : affichage en grille responsive des cartes enfants avec photo, âge et résumé des dernières mesures.
+    \item \textbf{Détail d'un enfant (\texttt{ChildDetailPage})} : vue complète avec onglets (informations, mesures, courbes, alertes).
+    \item \textbf{Formulaire enfant (\texttt{ChildFormPage})} : formulaire de création/modification avec validation (nom, date de naissance, sexe, groupe sanguin, mode grossesse).
+\end{itemize}
+
+\subsection{Saisie de mesures}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.85\textwidth]{figures/screenshot_measurement.png}
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}\textit{[Capture d'écran : Formulaire de mesure]}\vspace{3cm}}}
+\caption{Formulaire de saisie de mesure}
+\label{fig:measurement}
+\end{figure}
+
+Le formulaire de mesure (\texttt{MeasurementFormPage}) permet la saisie de toutes les variables demandées par l'encadrant : poids, taille, périmètre crânien, taille du pied, taille de l'oreille, tour du cou et tour du poignet. L'IMC est calculé automatiquement. La date de mesure est saisie via un sélecteur de date.
+
+\subsection{Courbes de croissance}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.85\textwidth]{figures/screenshot_growth.png}
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}\textit{[Capture d'écran : Courbes de croissance]}\vspace{3cm}}}
+\caption{Courbes de croissance avec percentiles OMS}
+\label{fig:growth}
+\end{figure}
+
+La page des courbes de croissance (\texttt{GrowthChartsPage}) affiche des graphiques interactifs réalisés avec Recharts. Elle comprend :
+\begin{itemize}
+    \item Un sélecteur d'enfant et de type de mesure (poids/âge, taille/âge, IMC/âge).
+    \item Les courbes de percentiles OMS (3\textsuperscript{e}, 15\textsuperscript{e}, 50\textsuperscript{e}, 85\textsuperscript{e}, 97\textsuperscript{e}) différenciées par sexe.
+    \item Les points de données de l'enfant superposés aux courbes de référence.
+    \item Un \textit{disclaimer} médical rappelant que les courbes sont indicatives.
+\end{itemize}
+
+\subsection{Centre d'alertes}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.85\textwidth]{figures/screenshot_alerts.png}
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}\textit{[Capture d'écran : Centre d'alertes]}\vspace{3cm}}}
+\caption{Centre d'alertes de santé}
+\label{fig:alerts}
+\end{figure}
+
+Le centre d'alertes (\texttt{AlertsCenterPage}) affiche l'ensemble des notifications de santé avec :
+\begin{itemize}
+    \item Un filtrage par sévérité (toutes, informations, avertissements, dangers).
+    \item Un code couleur intuitif (bleu pour info, orange pour avertissement, rouge pour danger).
+    \item Chaque alerte porte un message et une recommandation de consultation médicale.
+    \item Un \textit{disclaimer} médical est affiché en en-tête de la page.
+\end{itemize}
+
+\subsection{Suivi de grossesse}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.85\textwidth]{figures/screenshot_pregnancy.png}
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}\textit{[Capture d'écran : Suivi de grossesse]}\vspace{3cm}}}
+\caption{Suivi de grossesse semaine par semaine}
+\label{fig:pregnancy}
+\end{figure}
+
+La page de suivi de grossesse (\texttt{PregnancyTrackerPage}) présente une timeline hebdomadaire avec les jalons de développement fœtal, le suivi du poids maternel et des indicateurs clés.
+
+\subsection{Import OCR}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.85\textwidth]{figures/screenshot_ocr.png}
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}\textit{[Capture d'écran : Import OCR]}\vspace{3cm}}}
+\caption{Interface d'import OCR}
+\label{fig:ocr}
+\end{figure}
+
+La page d'import OCR (\texttt{OcrImportPage}) offre une zone de glisser-déposer pour le téléversement de documents, un aperçu du document, et une interface de validation des données extraites.
+
+\textit{Note : l'extraction OCR est actuellement simulée. L'intégration avec pytesseract ou Google Vision API est prévue en Phase~4.}
+
+\subsection{Paramètres}
+
+La page de paramètres (\texttt{SettingsPage}) permet la gestion du profil utilisateur, la modification du mot de passe et la configuration des préférences de notification.
+
+% -------------------------------------------------------------------
+\section{Déploiement}
+\label{sec:deploiement}
+
+L'application frontend est déployée automatiquement sur \textbf{GitHub Pages} via le package \texttt{gh-pages}. Le processus de déploiement est le suivant :
+
+\begin{enumerate}
+    \item La commande \texttt{npm run build} génère les fichiers statiques optimisés dans le répertoire \texttt{dist/}.
+    \item La commande \texttt{npm run deploy} publie le contenu de \texttt{dist/} sur la branche \texttt{gh-pages} du dépôt GitHub.
+    \item L'application est accessible à l'URL : \url{https://GribejFarouk.github.io/Child-Care-/}
+\end{enumerate}
+
+Le routage utilise \texttt{HashRouter} (React Router) pour assurer la compatibilité avec GitHub Pages, qui ne supporte pas nativement le routage côté client.
+
+% -------------------------------------------------------------------
+\section{État d'avancement actuel}
+\label{sec:avancement}
+
+Le tableau~\ref{tab:avancement} résume l'état d'avancement du projet au moment de la rédaction de ce rapport.
+
+\begin{table}[htbp]
+\centering
+\caption{État d'avancement du projet}
+\label{tab:avancement}
+\begin{tabularx}{\textwidth}{|l|X|c|}
+\hline
+\textbf{Composant} & \textbf{Description} & \textbf{État} \\
+\hline
+Frontend React & 14 pages, 8 composants UI, routage complet, données simulées & \textbf{Réalisé} \\
+\hline
+Design system & Tailwind CSS avec thème personnalisé, glassmorphism, animations & \textbf{Réalisé} \\
+\hline
+Courbes OMS & Visualisation avec Recharts, percentiles garçons/filles & \textbf{Réalisé} \\
+\hline
+Déploiement & GitHub Pages avec déploiement automatisé & \textbf{Réalisé} \\
+\hline
+Diagrammes UML & 5 diagrammes de séquence PlantUML + exports PNG & \textbf{Réalisé} \\
+\hline
+\textit{Disclaimers} médicaux & Modale au premier accès + bandeaux sur pages critiques & \textbf{Réalisé} \\
+\hline
+Auth Service (Django) & Inscription, connexion, JWT & \textbf{Non démarré} \\
+\hline
+Profile Service (Django) & CRUD profils enfants & \textbf{Non démarré} \\
+\hline
+Measurements Service & Saisie et stockage des mesures & \textbf{Non démarré} \\
+\hline
+Analytics Service & Calcul percentiles, moteur d'alertes & \textbf{Non démarré} \\
+\hline
+OCR Service & Extraction de texte depuis images & \textbf{Non démarré} \\
+\hline
+Docker Compose & Orchestration des microservices & \textbf{Non démarré} \\
+\hline
+Service IA & Prédiction d'anomalies & \textbf{Non démarré} \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Bilan quantitatif de la Phase 1}
+
+\begin{itemize}
+    \item \textbf{14 pages} développées et fonctionnelles (4 publiques + 10 protégées)
+    \item \textbf{8 composants UI} réutilisables
+    \item \textbf{12 jeux de données simulées} avec noms tunisiens
+    \item \textbf{5 diagrammes de séquence} UML
+    \item \textbf{0 erreur, 0 avertissement} au build de production
+    \item \textbf{4 chunks} optimisés (tous < 350~Ko)
+    \item Application déployée et accessible en ligne
+\end{itemize}
+
+% -------------------------------------------------------------------
+\section*{Conclusion}
+Ce chapitre a présenté la réalisation concrète de la Phase~1 du projet ChildCare+, comprenant un frontend complet et fonctionnel avec données simulées. L'ensemble des interfaces prévues a été développé, testé et déployé. Les prochaines phases porteront sur le développement du backend microservices (Django + DRF + PostgreSQL) et l'intégration progressive avec le frontend existant.

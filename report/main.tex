@@ -1,0 +1,105 @@
+% ============================================================================
+% ChildCare+ — Rapport de Projet de Fin d'Études
+% Licence en Génie Logiciel et Système d'Information
+% Université de Monastir — Année universitaire 2024/2025
+% ============================================================================
+
+\documentclass[12pt,a4paper]{report}
+
+% --- Encodage et langue ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% --- Mise en page ---
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+
+% --- Graphiques et figures ---
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{float}
+
+% --- Tableaux ---
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+
+% --- Couleurs et liens ---
+\usepackage[dvipsnames]{xcolor}
+\usepackage[
+  colorlinks=true,
+  linkcolor=NavyBlue,
+  citecolor=NavyBlue,
+  urlcolor=NavyBlue,
+  bookmarks=true
+]{hyperref}
+
+% --- En-têtes et pieds de page ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\leftmark}
+\fancyhead[R]{\small ChildCare+}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% --- Titres de chapitres ---
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{40pt}
+
+% --- Listings de code ---
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{gray!5},
+  frame=single,
+  rulecolor=\color{gray!30},
+  breaklines=true,
+  captionpos=b,
+  showstringspaces=false,
+  tabsize=2
+}
+
+% --- Divers ---
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% ============================================================================
+\begin{document}
+
+% --- Page de garde ---
+\input{frontmatter/page_garde}
+
+% --- Pages liminaires (non numérotées puis numérotation romaine) ---
+\pagenumbering{roman}
+
+\input{frontmatter/dedicace}
+\input{frontmatter/remerciements}
+
+% --- Tables ---
+\tableofcontents
+\listoffigures
+\listoftables
+
+% --- Corps du rapport (numérotation arabe) ---
+\pagenumbering{arabic}
+
+\input{chapters/introduction}
+\input{chapters/chapter1}
+\input{chapters/chapter2}
+\input{chapters/chapter3}
+\input{chapters/chapter4}
+\input{chapters/conclusion}
+
+% --- Webographie ---
+\input{chapters/webographie}
+
+\end{document}

@@ -1,0 +1,241 @@
+% ============================================================================
+% Chapitre 2 — Analyse et Spécification des Besoins
+% ============================================================================
+\chapter{Analyse et Spécification des Besoins}
+\label{chap:analyse}
+
+\section*{Introduction}
+Ce chapitre est consacré à l'analyse des besoins de l'application ChildCare+. Nous identifions d'abord les acteurs du système, puis nous détaillons les besoins fonctionnels et non fonctionnels. Enfin, nous formalisons les principaux cas d'utilisation à l'aide de diagrammes UML.
+
+% -------------------------------------------------------------------
+\section{Identification des acteurs}
+\label{sec:acteurs}
+
+Un acteur représente une entité externe qui interagit avec le système. Dans le cadre de ChildCare+, nous identifions les acteurs suivants :
+
+\begin{table}[htbp]
+\centering
+\caption{Acteurs du système ChildCare+}
+\label{tab:acteurs}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Acteur} & \textbf{Description} \\
+\hline
+\textbf{Parent (utilisateur principal)} & Personne responsable d'un ou plusieurs enfants, qui utilise la plateforme pour enregistrer, consulter et suivre les données de santé de ses enfants. \\
+\hline
+\textbf{Système} & L'application elle-même, qui effectue des traitements automatiques : calcul de percentiles, génération d'alertes, extraction OCR, envoi de notifications. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\textit{Note :} dans la version actuelle, il n'y a pas de rôle médecin ou administrateur. Ces rôles pourront être envisagés dans une évolution future du système.
+
+% -------------------------------------------------------------------
+\section{Besoins fonctionnels}
+\label{sec:besoins-fonctionnels}
+
+Les besoins fonctionnels décrivent les fonctionnalités que le système doit offrir à ses utilisateurs. Ils sont organisés par module fonctionnel.
+
+\subsection{Module Authentification}
+\begin{itemize}
+    \item \textbf{BF-01 :} Le parent doit pouvoir créer un compte avec son adresse e-mail et un mot de passe sécurisé.
+    \item \textbf{BF-02 :} Le parent doit pouvoir se connecter à son compte via un formulaire de login.
+    \item \textbf{BF-03 :} Le parent doit pouvoir réinitialiser son mot de passe en cas d'oubli.
+    \item \textbf{BF-04 :} Le système doit gérer l'authentification par jetons JWT (access + refresh).
+\end{itemize}
+
+\subsection{Module Profils Enfants}
+\begin{itemize}
+    \item \textbf{BF-05 :} Le parent doit pouvoir ajouter un profil enfant (nom, date de naissance, sexe, groupe sanguin, photo).
+    \item \textbf{BF-06 :} Le parent doit pouvoir consulter la liste de ses enfants depuis le tableau de bord.
+    \item \textbf{BF-07 :} Le parent doit pouvoir modifier ou supprimer un profil enfant existant.
+    \item \textbf{BF-08 :} Le système doit supporter un mode grossesse (profil avec date d'accouchement prévue).
+\end{itemize}
+
+\subsection{Module Mesures de Santé}
+\begin{itemize}
+    \item \textbf{BF-09 :} Le parent doit pouvoir saisir une mesure (poids, taille, périmètre crânien, tour de poignet, taille du pied, taille de l'oreille, tour du cou) avec la date de l'enregistrement.
+    \item \textbf{BF-10 :} Le système doit calculer automatiquement l'IMC à partir du poids et de la taille.
+    \item \textbf{BF-11 :} Le parent doit pouvoir consulter l'historique complet des mesures d'un enfant.
+    \item \textbf{BF-12 :} Le système doit distinguer les mesures saisies manuellement de celles importées par OCR.
+\end{itemize}
+
+\subsection{Module Courbes de Croissance}
+\begin{itemize}
+    \item \textbf{BF-13 :} Le système doit afficher des courbes de croissance interactives (poids/âge, taille/âge, IMC/âge).
+    \item \textbf{BF-14 :} Les courbes doivent intégrer les percentiles de référence de l'OMS (3\textsuperscript{e}, 15\textsuperscript{e}, 50\textsuperscript{e}, 85\textsuperscript{e}, 97\textsuperscript{e}).
+    \item \textbf{BF-15 :} Les courbes doivent être différenciées selon le sexe de l'enfant (garçons / filles).
+\end{itemize}
+
+\subsection{Module Alertes}
+\begin{itemize}
+    \item \textbf{BF-16 :} Le système doit comparer chaque mesure saisie aux seuils de référence OMS.
+    \item \textbf{BF-17 :} En cas de déviation, le système doit générer une alerte classifiée par sévérité : information, avertissement ou danger.
+    \item \textbf{BF-18 :} Le parent doit pouvoir consulter l'ensemble de ses alertes dans un centre de notifications dédié.
+    \item \textbf{BF-19 :} Chaque alerte doit recommander de consulter un professionnel de santé.
+\end{itemize}
+
+\subsection{Module OCR}
+\begin{itemize}
+    \item \textbf{BF-20 :} Le parent doit pouvoir téléverser une photo ou un scan de document médical.
+    \item \textbf{BF-21 :} Le système doit extraire automatiquement les données textuelles du document.
+    \item \textbf{BF-22 :} Le parent doit pouvoir vérifier et valider les données extraites avant leur enregistrement.
+\end{itemize}
+
+\subsection{Module Suivi de Grossesse}
+\begin{itemize}
+    \item \textbf{BF-23 :} Le parent doit pouvoir suivre une grossesse semaine par semaine.
+    \item \textbf{BF-24 :} Le système doit permettre d'enregistrer le poids maternel, la hauteur utérine, la fréquence cardiaque fœtale et les mouvements fœtaux.
+    \item \textbf{BF-25 :} Le système doit afficher les jalons de développement fœtal correspondant à chaque semaine.
+\end{itemize}
+
+\subsection{Module Paramètres}
+\begin{itemize}
+    \item \textbf{BF-26 :} Le parent doit pouvoir modifier ses informations personnelles (nom, e-mail, mot de passe).
+    \item \textbf{BF-27 :} Le parent doit pouvoir configurer ses préférences de notification.
+\end{itemize}
+
+% -------------------------------------------------------------------
+\section{Besoins non fonctionnels}
+\label{sec:besoins-non-fonctionnels}
+
+Les besoins non fonctionnels définissent les contraintes de qualité que le système doit respecter.
+
+\begin{table}[htbp]
+\centering
+\caption{Besoins non fonctionnels}
+\label{tab:bnf}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Catégorie} & \textbf{Description} \\
+\hline
+\textbf{Sécurité} & Les données médicales des enfants doivent être protégées par authentification JWT et chiffrement des mots de passe. Les communications doivent utiliser HTTPS. \\
+\hline
+\textbf{Ergonomie} & L'interface doit être intuitive, accessible aux parents non techniques, et entièrement responsive (mobile, tablette, desktop). \\
+\hline
+\textbf{Performance} & Les pages doivent se charger en moins de 3 secondes. Les graphiques doivent être fluides et interactifs. \\
+\hline
+\textbf{Scalabilité} & L'architecture microservices doit permettre de faire évoluer chaque service indépendamment. \\
+\hline
+\textbf{Maintenabilité} & Le code doit être modulaire, documenté et suivre les conventions de chaque technologie (React, Django). \\
+\hline
+\textbf{Disponibilité} & Le système doit être déployable sur un hébergement cloud avec une disponibilité visée de 99\%. \\
+\hline
+\textbf{Éthique médicale} & L'application ne doit jamais se substituer à un avis médical. Tout avertissement doit être accompagné d'un avertissement médical (\textit{disclaimer}). \\
+\hline
+\end{tabularx}
+\end{table}
+
+% -------------------------------------------------------------------
+\section{Diagramme de cas d'utilisation général}
+\label{sec:use-case}
+
+Le diagramme de cas d'utilisation ci-dessous présente une vue d'ensemble des interactions entre les acteurs et les principales fonctionnalités du système.
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.95\textwidth]{figures/use_case_general.png}
+\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Placeholder : Diagramme de cas d'utilisation général — à générer avec PlantUML ou un outil UML]}\vspace{3cm}}}
+\caption{Diagramme de cas d'utilisation général de ChildCare+}
+\label{fig:use-case-general}
+\end{figure}
+
+\subsection{Description textuelle des cas d'utilisation principaux}
+
+\subsubsection{CU-01 : S'inscrire}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Acteur principal} & Parent \\
+\hline
+\textbf{Précondition} & Le parent n'a pas de compte existant \\
+\hline
+\textbf{Scénario principal} &
+1. Le parent accède à la page d'inscription. \newline
+2. Il saisit son nom, son e-mail et un mot de passe. \newline
+3. Le système valide les données et crée le compte. \newline
+4. Le parent est redirigé vers le tableau de bord. \\
+\hline
+\textbf{Postcondition} & Un nouveau compte parent est créé dans le système \\
+\hline
+\end{tabularx}
+
+\vspace{0.5cm}
+
+\subsubsection{CU-02 : Ajouter un enfant}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Acteur principal} & Parent \\
+\hline
+\textbf{Précondition} & Le parent est authentifié \\
+\hline
+\textbf{Scénario principal} &
+1. Le parent clique sur <<~Ajouter un enfant~>>. \newline
+2. Il remplit le formulaire (nom, date de naissance, sexe, groupe sanguin). \newline
+3. Le système enregistre le profil. \newline
+4. L'enfant apparaît dans la liste du tableau de bord. \\
+\hline
+\textbf{Postcondition} & Un nouveau profil enfant est associé au compte parent \\
+\hline
+\end{tabularx}
+
+\vspace{0.5cm}
+
+\subsubsection{CU-03 : Saisir une mesure}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Acteur principal} & Parent \\
+\hline
+\textbf{Précondition} & Au moins un profil enfant existe \\
+\hline
+\textbf{Scénario principal} &
+1. Le parent sélectionne un enfant et accède au formulaire de mesure. \newline
+2. Il saisit les valeurs (poids, taille, périmètre crânien, etc.). \newline
+3. Le système calcule automatiquement l'IMC. \newline
+4. Le système compare les valeurs aux seuils OMS. \newline
+5. Si une anomalie est détectée, une alerte est générée. \\
+\hline
+\textbf{Postcondition} & La mesure est enregistrée et les alertes éventuelles sont créées \\
+\hline
+\end{tabularx}
+
+\vspace{0.5cm}
+
+\subsubsection{CU-04 : Consulter les courbes de croissance}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Acteur principal} & Parent \\
+\hline
+\textbf{Précondition} & Au moins une mesure existe pour l'enfant sélectionné \\
+\hline
+\textbf{Scénario principal} &
+1. Le parent accède à la page des courbes de croissance. \newline
+2. Il sélectionne un enfant et un type de mesure (poids, taille, IMC). \newline
+3. Le système affiche la courbe avec les percentiles OMS et les mesures de l'enfant. \\
+\hline
+\textbf{Postcondition} & La courbe de croissance est affichée avec les données de l'enfant \\
+\hline
+\end{tabularx}
+
+\vspace{0.5cm}
+
+\subsubsection{CU-05 : Importer un document par OCR}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Acteur principal} & Parent \\
+\hline
+\textbf{Précondition} & Le parent est authentifié et dispose d'un document médical à numériser \\
+\hline
+\textbf{Scénario principal} &
+1. Le parent accède au module OCR et téléverse une photo du document. \newline
+2. Le système extrait le texte du document via OCR. \newline
+3. Le système propose une interprétation structurée des données extraites. \newline
+4. Le parent vérifie, corrige si nécessaire, puis valide l'import. \newline
+5. Les données sont enregistrées dans le profil de l'enfant concerné. \\
+\hline
+\textbf{Postcondition} & Les données extraites sont enregistrées comme nouvelles mesures \\
+\hline
+\end{tabularx}
+
+% -------------------------------------------------------------------
+\section*{Conclusion}
+Ce chapitre a permis d'identifier les acteurs du système, de recenser l'ensemble des besoins fonctionnels et non fonctionnels, et de formaliser les principaux cas d'utilisation. Cette analyse constitue le fondement de la phase de conception détaillée présentée dans le chapitre suivant.

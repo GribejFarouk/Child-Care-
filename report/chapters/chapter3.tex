@@ -1,0 +1,326 @@
+% ============================================================================
+% Chapitre 3 — Conception
+% ============================================================================
+\chapter{Conception}
+\label{chap:conception}
+
+\section*{Introduction}
+Ce chapitre présente la conception architecturale et technique de la plateforme ChildCare+. Nous décrivons d'abord l'architecture globale orientée microservices, puis le modèle conceptuel de données, et enfin les diagrammes de séquence illustrant les interactions clés du système.
+
+% -------------------------------------------------------------------
+\section{Architecture globale}
+\label{sec:architecture}
+
+L'application ChildCare+ adopte une \textbf{architecture microservices}, dans laquelle chaque domaine fonctionnel est encapsulé dans un service indépendant. Cette approche offre plusieurs avantages :
+
+\begin{itemize}
+    \item \textbf{Modularité :} chaque service est développé, testé et déployé indépendamment.
+    \item \textbf{Scalabilité :} il est possible de dimensionner chaque service selon sa charge propre.
+    \item \textbf{Maintenabilité :} une modification dans un service n'affecte pas les autres.
+    \item \textbf{Résilience :} la défaillance d'un service n'entraîne pas l'arrêt de l'ensemble du système.
+\end{itemize}
+
+\subsection{Vue d'ensemble de l'architecture}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.95\textwidth]{figures/architecture_globale.png}
+\fbox{\parbox{0.9\textwidth}{\centering\vspace{4cm}\textit{[Placeholder : Diagramme d'architecture globale — Client React $\leftrightarrow$ Nginx (API Gateway) $\leftrightarrow$ Microservices Django]}\vspace{4cm}}}
+\caption{Architecture globale de ChildCare+}
+\label{fig:architecture-globale}
+\end{figure}
+
+L'architecture se compose de trois couches principales :
+
+\begin{enumerate}
+    \item \textbf{Couche présentation (Frontend)} : une application React.js monopage (SPA) qui communique avec le backend via des requêtes HTTP REST.
+    \item \textbf{Couche passerelle (API Gateway)} : un serveur Nginx qui route les requêtes vers le microservice approprié.
+    \item \textbf{Couche métier (Backend)} : sept microservices Django, chacun avec sa propre base de données PostgreSQL.
+\end{enumerate}
+
+\subsection{Description des microservices}
+
+Le tableau~\ref{tab:microservices} détaille les sept microservices qui composent le backend de ChildCare+.
+
+\begin{table}[htbp]
+\centering
+\caption{Description des microservices de ChildCare+}
+\label{tab:microservices}
+\begin{tabularx}{\textwidth}{|c|l|X|}
+\hline
+\textbf{\#} & \textbf{Service} & \textbf{Responsabilité} \\
+\hline
+1 & Auth Service & Inscription, connexion, émission et rafraîchissement des jetons JWT, réinitialisation du mot de passe \\
+\hline
+2 & Profile Service & CRUD des profils enfants, gestion du mode grossesse \\
+\hline
+3 & Measurements Service & Saisie, modification et consultation de toutes les mesures de santé \\
+\hline
+4 & Analytics Service & Calcul des percentiles OMS, moteur de règles d'alertes \\
+\hline
+5 & OCR Service & Téléversement de fichiers, extraction de texte, structuration des données extraites en JSON \\
+\hline
+6 & Notification Service & Gestion des alertes in-app, déclenchées par l'Analytics Service \\
+\hline
+7 & AI Service \textit{(Phase 2)} & Prédiction d'anomalies, suggestions nutritionnelles et de mode de vie \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Communication inter-services}
+
+Les microservices communiquent entre eux via des \textbf{appels REST/HTTP synchrones}. Le serveur Nginx joue le rôle de passerelle API (\textit{API Gateway}), acheminant chaque requête vers le service concerné en fonction du préfixe de l'URL :
+
+\begin{itemize}
+    \item \texttt{/api/auth/*} $\rightarrow$ Auth Service
+    \item \texttt{/api/profiles/*} $\rightarrow$ Profile Service
+    \item \texttt{/api/measurements/*} $\rightarrow$ Measurements Service
+    \item \texttt{/api/analytics/*} $\rightarrow$ Analytics Service
+    \item \texttt{/api/ocr/*} $\rightarrow$ OCR Service
+    \item \texttt{/api/notifications/*} $\rightarrow$ Notification Service
+\end{itemize}
+
+% -------------------------------------------------------------------
+\section{Modèle conceptuel de données}
+\label{sec:modele-donnees}
+
+Cette section présente les principales entités du système et leurs relations.
+
+\subsection{Diagramme de classes}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.95\textwidth]{figures/diagramme_classes.png}
+\fbox{\parbox{0.9\textwidth}{\centering\vspace{4cm}\textit{[Placeholder : Diagramme de classes UML — à générer avec PlantUML]}\vspace{4cm}}}
+\caption{Diagramme de classes de ChildCare+}
+\label{fig:diagramme-classes}
+\end{figure}
+
+\subsection{Description des entités}
+
+\subsubsection{Entité Parent (User)}
+\begin{table}[htbp]
+\centering
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Attribut} & \textbf{Type} & \textbf{Description} \\
+\hline
+id & Integer (PK) & Identifiant unique \\
+email & String (unique) & Adresse e-mail du parent \\
+password\_hash & String & Mot de passe chiffré \\
+full\_name & String & Nom complet \\
+phone & String & Numéro de téléphone \\
+created\_at & DateTime & Date de création du compte \\
+\hline
+\end{tabularx}
+\caption{Attributs de l'entité Parent}
+\end{table}
+
+\subsubsection{Entité Child (Profil Enfant)}
+\begin{table}[htbp]
+\centering
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Attribut} & \textbf{Type} & \textbf{Description} \\
+\hline
+id & Integer (PK) & Identifiant unique \\
+parent\_id & Integer (FK) & Référence vers le parent \\
+full\_name & String & Nom complet de l'enfant \\
+date\_of\_birth & Date & Date de naissance \\
+sex & Enum (M/F) & Sexe de l'enfant \\
+blood\_group & String & Groupe sanguin \\
+profile\_picture & String & URL de la photo de profil \\
+is\_pregnancy\_mode & Boolean & Indique si c'est un suivi de grossesse \\
+expected\_due\_date & Date & Date d'accouchement prévue (mode grossesse) \\
+created\_at & DateTime & Date de création du profil \\
+\hline
+\end{tabularx}
+\caption{Attributs de l'entité Child}
+\end{table}
+
+\subsubsection{Entité Measurement (Mesure)}
+\begin{table}[htbp]
+\centering
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Attribut} & \textbf{Type} & \textbf{Description} \\
+\hline
+id & Integer (PK) & Identifiant unique \\
+child\_id & Integer (FK) & Référence vers l'enfant \\
+date\_recorded & Date & Date de la mesure \\
+age\_at\_recording & Float & Âge en mois au moment de la mesure \\
+weight\_kg & Float & Poids en kilogrammes \\
+height\_cm & Float & Taille en centimètres \\
+bmi & Float & IMC (calculé automatiquement) \\
+head\_circumference\_cm & Float & Périmètre crânien \\
+foot\_size\_cm & Float & Taille du pied \\
+ear\_size\_cm & Float & Taille de l'oreille \\
+neck\_circumference\_cm & Float & Tour du cou \\
+wrist\_circumference\_cm & Float & Tour du poignet \\
+notes & Text & Notes libres \\
+source & Enum & Source de la donnée (manual / ocr\_import) \\
+created\_at & DateTime & Date de création de l'enregistrement \\
+\hline
+\end{tabularx}
+\caption{Attributs de l'entité Measurement}
+\end{table}
+
+\subsubsection{Entité PregnancyEntry (Entrée de suivi de grossesse)}
+\begin{table}[htbp]
+\centering
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Attribut} & \textbf{Type} & \textbf{Description} \\
+\hline
+id & Integer (PK) & Identifiant unique \\
+child\_id & Integer (FK) & Référence vers le profil grossesse \\
+week\_number & Integer & Numéro de la semaine de grossesse \\
+mother\_weight\_kg & Float & Poids de la mère \\
+fundal\_height\_cm & Float & Hauteur utérine \\
+fetal\_heart\_rate & Integer & Fréquence cardiaque fœtale \\
+fetal\_movement\_count & Integer & Nombre de mouvements fœtaux \\
+ultrasound\_notes & Text & Notes d'échographie \\
+date\_recorded & Date & Date de l'enregistrement \\
+\hline
+\end{tabularx}
+\caption{Attributs de l'entité PregnancyEntry}
+\end{table}
+
+\subsubsection{Entité Alert (Alerte)}
+\begin{table}[htbp]
+\centering
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Attribut} & \textbf{Type} & \textbf{Description} \\
+\hline
+id & Integer (PK) & Identifiant unique \\
+child\_id & Integer (FK) & Référence vers l'enfant \\
+measurement\_id & Integer (FK) & Référence vers la mesure concernée \\
+alert\_type & String & Type d'alerte (croissance, vaccination, etc.) \\
+severity & Enum & Sévérité : info, warning, danger \\
+message & Text & Message descriptif de l'alerte \\
+is\_read & Boolean & Indique si l'alerte a été lue \\
+created\_at & DateTime & Date de création de l'alerte \\
+\hline
+\end{tabularx}
+\caption{Attributs de l'entité Alert}
+\end{table}
+
+\subsection{Relations entre entités}
+
+Les relations principales entre les entités sont les suivantes :
+
+\begin{itemize}
+    \item Un \textbf{Parent} possède un ou plusieurs \textbf{Enfants} (relation 1..N).
+    \item Un \textbf{Enfant} possède zéro ou plusieurs \textbf{Mesures} (relation 1..N).
+    \item Un \textbf{Enfant} en mode grossesse possède zéro ou plusieurs \textbf{Entrées de grossesse} (relation 1..N).
+    \item Une \textbf{Mesure} peut déclencher zéro ou plusieurs \textbf{Alertes} (relation 1..N).
+    \item Un \textbf{Enfant} peut avoir zéro ou plusieurs \textbf{Alertes} (relation 1..N).
+\end{itemize}
+
+% -------------------------------------------------------------------
+\section{Diagrammes de séquence}
+\label{sec:diagrammes-sequence}
+
+Les diagrammes de séquence illustrent les interactions entre les acteurs et les composants du système pour les scénarios principaux. Cinq diagrammes ont été élaborés, correspondant aux cas d'utilisation clés identifiés au chapitre~\ref{chap:analyse}.
+
+\subsection{DS-01 : Inscription et création de profil enfant}
+
+Ce diagramme illustre le processus d'inscription d'un parent suivi de la création d'un premier profil enfant.
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.95\textwidth]{figures/seq_auth.png}
+\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Inclure : docs/diagrams/seq\_auth.png]}\vspace{3cm}}}
+\caption{Diagramme de séquence --- Inscription et création de profil}
+\label{fig:seq-auth}
+\end{figure}
+
+\textbf{Description :}
+\begin{enumerate}
+    \item Le parent remplit le formulaire d'inscription (nom, e-mail, mot de passe).
+    \item Le frontend envoie une requête POST au Auth Service via l'API Gateway.
+    \item Le Auth Service valide les données, crée le compte et retourne un jeton JWT.
+    \item Le parent est redirigé vers le tableau de bord.
+    \item Le parent crée un profil enfant via le Profile Service.
+\end{enumerate}
+
+\subsection{DS-02 : Ajout d'une mesure manuelle}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.95\textwidth]{figures/seq_add_measurement.png}
+\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Inclure : docs/diagrams/seq\_add\_measurement.png]}\vspace{3cm}}}
+\caption{Diagramme de séquence --- Ajout d'une mesure}
+\label{fig:seq-measurement}
+\end{figure}
+
+\textbf{Description :}
+\begin{enumerate}
+    \item Le parent accède au formulaire de mesure pour un enfant donné.
+    \item Il saisit les valeurs (poids, taille, périmètre crânien, etc.).
+    \item Le frontend envoie les données au Measurements Service.
+    \item Le Measurements Service enregistre la mesure et notifie l'Analytics Service.
+    \item L'Analytics Service compare les valeurs aux normes OMS.
+    \item En cas d'anomalie, l'Analytics Service crée une alerte via le Notification Service.
+\end{enumerate}
+
+\subsection{DS-03 : Import OCR d'un document médical}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.95\textwidth]{figures/seq_ocr_import.png}
+\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Inclure : docs/diagrams/seq\_ocr\_import.png]}\vspace{3cm}}}
+\caption{Diagramme de séquence --- Import OCR}
+\label{fig:seq-ocr}
+\end{figure}
+
+\textbf{Description :}
+\begin{enumerate}
+    \item Le parent téléverse une photo de document médical.
+    \item Le frontend transmet le fichier à l'OCR Service.
+    \item L'OCR Service extrait le texte et le structure en données JSON.
+    \item Les données extraites sont présentées au parent pour validation.
+    \item Après validation, les données sont enregistrées dans le Measurements Service.
+\end{enumerate}
+
+\subsection{DS-04 : Consultation des courbes de croissance}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.95\textwidth]{figures/seq_growth_chart.png}
+\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Inclure : docs/diagrams/seq\_growth\_chart.png]}\vspace{3cm}}}
+\caption{Diagramme de séquence --- Courbes de croissance}
+\label{fig:seq-growth}
+\end{figure}
+
+\textbf{Description :}
+\begin{enumerate}
+    \item Le parent sélectionne un enfant et un type de mesure.
+    \item Le frontend récupère les mesures depuis le Measurements Service.
+    \item Le frontend récupère les données de référence OMS depuis l'Analytics Service.
+    \item Le composant Recharts affiche la courbe avec les percentiles et les données de l'enfant.
+\end{enumerate}
+
+\subsection{DS-05 : Détection d'anomalie et alerte de santé}
+
+\begin{figure}[htbp]
+\centering
+% \includegraphics[width=0.95\textwidth]{figures/seq_health_alert.png}
+\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Inclure : docs/diagrams/seq\_health\_alert.png]}\vspace{3cm}}}
+\caption{Diagramme de séquence --- Alerte de santé}
+\label{fig:seq-alert}
+\end{figure}
+
+\textbf{Description :}
+\begin{enumerate}
+    \item Suite à l'enregistrement d'une mesure, l'Analytics Service évalue les données.
+    \item Le moteur de règles compare les valeurs aux seuils OMS (percentiles 3, 15, 85, 97).
+    \item Si une déviation est détectée, une alerte est créée avec un niveau de sévérité.
+    \item Le Notification Service enregistre l'alerte et la rend disponible dans le centre d'alertes.
+    \item Le parent consulte le centre d'alertes et lit le message avec la recommandation de consulter un médecin.
+\end{enumerate}
+
+% -------------------------------------------------------------------
+\section*{Conclusion}
+Ce chapitre a détaillé la conception de ChildCare+ : l'architecture microservices avec ses sept services spécialisés, le modèle conceptuel de données avec cinq entités principales, et les diagrammes de séquence couvrant les cinq scénarios clés. Cette conception fournit le cadre technique nécessaire à la réalisation présentée dans le chapitre suivant.

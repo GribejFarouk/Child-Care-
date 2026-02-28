@@ -11,3 +11,19 @@ dist-ssr/
 
 # PlantUML JAR
 plantuml.jar
+
+# OS metadata
+desktop.ini
+Thumbs.db
+
+# AI assistant / tool metadata
+.gemini/
+GEMINI.md
+.copilot/
+.aider*
+.cursor/
+
+# Unrelated local files
+*.pdf
+!report/**/*.pdf
+!docs/**/*.pdf

@@ -29,7 +29,7 @@
     *   Displays rich mock data (a parent with multiple children of different ages).
     *   Shows high-level summaries, recent alerts, and quick access to growth charts.
     *   Contains the FAB for adding new measurements.
-2.  **Sidebar Menu:** Links to Dashboard, Children Profiles, Pregnancy Tracker, Alerts, and Settings.
+2.  **Sidebar Menu:** Links to Dashboard, Children Profiles, Alerts, and Settings.
 
 ## 4. Mock Data Requirements (For Design Context)
 *   The UI must be designed to accommodate multiple children cards/widgets simultaneously.

@@ -18,7 +18,14 @@ report/
 │   ├── conclusion.tex                # Conclusion générale et perspectives
 │   └── webographie.tex               # Références bibliographiques
 ├── figures/                          # Captures d'écran et diagrammes
-│   └── .gitkeep
+│   ├── usecase_global.png            # Diagramme de cas d'utilisation
+│   ├── architecture_globale.png      # Diagramme d'architecture
+│   ├── classe_globale.png            # Diagramme de classes
+│   ├── seq_auth.png                  # DS-01 : Inscription
+│   ├── seq_add_measurement.png       # DS-02 : Ajout mesure
+│   ├── seq_ocr_import.png            # DS-03 : Import OCR
+│   ├── seq_growth_chart.png          # DS-04 : Courbes de croissance
+│   └── seq_health_alert.png          # DS-05 : Alerte de santé
 ├── README.md                         # Ce fichier
 ├── REPORT_UPDATE_WORKFLOW.md         # Règles de mise à jour du rapport
 └── PROGRESS_LOG.md                   # Journal d'avancement
@@ -65,14 +72,16 @@ Placer les captures d'écran dans `report/figures/` avec les noms suivants :
 - `screenshot_measurement.png`
 - `screenshot_growth.png`
 - `screenshot_alerts.png`
-- `screenshot_pregnancy.png`
+- `screenshot_calendar.png`
+- `screenshot_collaboration.png`
+- `screenshot_doctor_dashboard.png`
 - `screenshot_ocr.png`
 
 Puis décommenter les `\includegraphics` correspondants dans `chapter4.tex`.
 
 ## Diagrammes
 
-Les diagrammes de séquence PlantUML sont dans `docs/diagrams/`. Copier les PNG dans `report/figures/` puis décommenter les `\includegraphics` dans `chapter3.tex`.
+Les diagrammes UML PlantUML sont dans `docs/diagrams/`. Les PNGs sont déjà copiés dans `report/figures/` et intégrés dans les chapitres 2 et 3 via `\includegraphics`.
 
 ## Règles de mise à jour
 

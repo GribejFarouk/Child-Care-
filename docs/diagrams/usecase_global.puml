@@ -1,0 +1,58 @@
+@startuml usecase_global
+!theme plain
+left to right direction
+skinparam backgroundColor #FFFFFF
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #F8FAFC
+  BorderColor #CBD5E1
+  ArrowColor #64748B
+}
+skinparam actor {
+  BackgroundColor #FFFFFF
+  BorderColor #0F172A
+}
+
+title Cas d'utilisation global - ChildCare+
+
+actor "Parent" as Parent
+actor "Medecin" as Doctor
+
+rectangle "Plateforme ChildCare+" {
+  usecase "S'authentifier" as UC_AUTH
+  usecase "Gerer les enfants" as UC_CHILD
+  usecase "Saisir les mesures" as UC_MEASURE
+  usecase "Consulter courbes\net alertes" as UC_MONITOR
+  usecase "Importer un document OCR" as UC_OCR
+  usecase "Gerer calendrier medical" as UC_CAL
+  usecase "Partager un dossier enfant" as UC_SHARE
+  usecase "Echanger des messages" as UC_MSG
+  usecase "Accepter un code de partage" as UC_ACCEPT
+  usecase "Consulter un dossier autorise" as UC_VIEW
+}
+
+Parent --> UC_AUTH
+Parent --> UC_CHILD
+Parent --> UC_MEASURE
+Parent --> UC_MONITOR
+Parent --> UC_OCR
+Parent --> UC_CAL
+Parent --> UC_SHARE
+Parent --> UC_MSG
+
+Doctor --> UC_AUTH
+Doctor --> UC_ACCEPT
+Doctor --> UC_VIEW
+Doctor --> UC_MSG
+
+UC_SHARE ..> UC_VIEW : autorise
+UC_MEASURE ..> UC_MONITOR : alimente
+UC_OCR ..> UC_MEASURE : apres validation parent
+
+note bottom of UC_MONITOR
+  Analyse preliminaire.
+  Ne remplace pas un avis medical.
+end note
+
+@enduml

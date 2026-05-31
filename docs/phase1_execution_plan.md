@@ -15,7 +15,7 @@
     3. Design high-fidelity mockups for Auth screens (Landing, Login, Sign Up).
     4. Design Dashboard and Navigation (Sidebar/Bottom bar).
     5. Design Data Entry screens (Add Measurement, OCR Import).
-    6. Design Visualization screens (Growth Charts, Pregnancy Tracker).
+    6. Design Visualization screens (Growth Charts).
     7. Design auxiliary screens (Alerts, Settings, Child Profile).
     8. Integrate "Consult a Doctor" medical disclaimers into relevant screens (Alerts, Charts).
 *   **Estimated Effort:** 4-5 Days
@@ -53,7 +53,7 @@
 *   **Week 2: Foundation & Auth**
     *   *Outputs:* 5 Sequence Diagrams completed. `mockData.js` populated. Shared components built. Landing, Sign Up, Login, Forgot Password, and base Dashboard layout implemented.
 *   **Week 3: Core Features & Data Visualization**
-    *   *Outputs:* Child Profile, Add/Edit Measurement forms, Pregnancy Tracker, and Growth Charts (using Recharts) implemented and linked.
+    *   *Outputs:* Child Profile, Add/Edit Measurement forms, and Growth Charts (using Recharts) implemented and linked.
 *   **Week 4: Advanced Features & Polish**
     *   *Outputs:* Alerts Center, OCR Import UI (mocked upload/processing state), Settings. Final quality assurance, mobile responsiveness checks, and Phase 1 sign-off.
 
@@ -67,7 +67,7 @@ Execute the frontend development in this exact sequence to ensure dependencies (
 2.  **Core Layout:** Dashboard Shell (Sidebar/Navbar/Mobile Menu).
 3.  **Entity Management:** Child Profile (List and Detail views).
 4.  **Data Entry:** Add/Edit Measurement (Forms with validation UI).
-5.  **Specialized Tracking:** Pregnancy Tracker (Timeline/Milestone UI).
+
 6.  **Visualization:** Growth Charts (Integrating Recharts with WHO standard mock data).
 7.  **Notifications:** Alerts Center (List of warnings/tips with medical disclaimers).
 8.  **Advanced UI:** OCR Import (Drag & drop zone, loading spinner, mock result confirmation).
@@ -90,7 +90,7 @@ Execute the frontend development in this exact sequence to ensure dependencies (
     ```
 *   **Routing Strategy:** Use `react-router-dom`. Separate routes into Public (Auth) and Private (Dashboard, Profiles). Use Layout components to wrap nested routes.
 *   **Shared Components:** Build dumb/stateless components early (e.g., `<PrimaryButton>`, `<DataCard>`, `<FormInput>`) to ensure UI consistency and speed up page development.
-*   **Mock Data Strategy:** Create a robust `src/data/mockData.js` exporting objects/arrays for `currentUser`, `children`, `measurements`, `alerts`, and `pregnancyData`. Components should import this data directly to simulate API calls (optionally wrap in `setTimeout` to simulate network latency for loading states).
+*   **Mock Data Strategy:** Create a robust `src/data/mockData.js` exporting objects/arrays for `currentUser`, `children`, `measurements`, and `alerts`. Components should import this data directly to simulate API calls (optionally wrap in `setTimeout` to simulate network latency for loading states).
 
 ---
 

@@ -1,35 +1,30 @@
 % ============================================================================
-% Conclusion Générale et Perspectives
+% Conclusion Generale et Perspectives
 % ============================================================================
 \chapter*{Conclusion Générale et Perspectives}
 \addcontentsline{toc}{chapter}{Conclusion Générale et Perspectives}
 \markboth{Conclusion Générale et Perspectives}{Conclusion Générale et Perspectives}
 
-Le présent projet de fin d'études avait pour objectif la conception et le développement de \textbf{ChildCare+}, une plateforme numérique de suivi de la santé infantile destinée aux parents tunisiens.
+Le projet ChildCare+ avait pour objectif de concevoir et développer une plateforme web de suivi de santé et de nutrition des enfants. Le travail réalisé a permis de passer d'une idée centrée sur le suivi infantile à une application structurée, composée d'un espace parent, d'un espace médecin et de plusieurs services backend spécialisés.
 
-Au terme de la Phase~1 de développement, j'ai réalisé les livrables suivants :
+La plateforme développée permet aujourd'hui de gérer les profils enfants, de saisir les mesures, de calculer l'IMC, de visualiser les courbes selon les références OMS disponibles, de générer des alertes et constats cliniques, d'importer des documents par OCR, de gérer un calendrier médical, de recevoir des notifications, de partager le dossier avec un médecin, d'échanger des messages et d'ouvrir des consultations par lien externe. Un assistant santé complète l'expérience parent en expliquant les constats déjà calculés, avec un vocabulaire plus simple et des garde-fous médicaux.
 
-\begin{itemize}
-    \item Une \textbf{analyse complète des besoins} identifiant 27 besoins fonctionnels répartis en 8 modules et 7 besoins non fonctionnels.
-    \item Une \textbf{conception détaillée} de l'architecture microservices à 7 services, du modèle conceptuel de données et de 5 diagrammes de séquence UML.
-    \item Un \textbf{frontend complet et fonctionnel} comprenant 14 pages, 8 composants UI réutilisables et 12 jeux de données simulées, développé avec React.js, Tailwind CSS et Recharts.
-    \item Un \textbf{déploiement continu} sur GitHub Pages, rendant l'application accessible en ligne.
-\end{itemize}
+Sur le plan technique, ce projet a permis de mettre en pratique plusieurs compétences de génie logiciel : analyse des besoins, modélisation UML, développement frontend avec React, développement backend avec Django REST Framework, architecture microservices, bases PostgreSQL, Dockerisation, sécurité JWT, contrôle d'accès par permission, OCR, intégration d'un modèle IA et tests de validation.
 
-L'application respecte les principes fondamentaux définis en début de projet : elle ne se substitue jamais à un avis médical (chaque alerte recommande une consultation), elle intègre les normes de croissance de l'OMS et elle offre une interface intuitive adaptée aux parents non techniques.
+Le projet reste toutefois un prototype académique. Les alertes et recommandations ne constituent pas un diagnostic. Les résultats doivent être compris comme des signaux d'aide au suivi, destinés à encourager la vérification et la consultation d'un professionnel lorsque cela est nécessaire.
 
-\vspace{0.5cm}
-\textbf{Perspectives et travaux futurs :}
-
-Les phases suivantes du projet prévoient :
+\vspace{0.4cm}
+\textbf{Perspectives :}
 
 \begin{enumerate}
-    \item \textbf{Développement du backend microservices :} implémentation des services Auth, Profile et Measurements en Django + DRF avec bases de données PostgreSQL et authentification JWT.
-    \item \textbf{Moteur d'alertes :} développement de l'Analytics Service avec un moteur de règles comparant les mesures aux seuils OMS en temps réel.
-    \item \textbf{Intégration OCR :} mise en place du service d'extraction optique de caractères pour la numérisation automatique de documents médicaux.
-    \item \textbf{Conteneurisation :} orchestration de l'ensemble des services via Docker Compose avec un API Gateway Nginx.
-    \item \textbf{Service IA :} développement d'un modèle prédictif d'anomalies de croissance et d'un système de recommandations nutritionnelles.
-    \item \textbf{Tests et validation :} mise en place de tests unitaires, d'intégration et de tests utilisateurs.
+    \item \textbf{Validation clinique :} faire évaluer les règles, libellés et recommandations par des professionnels de santé.
+    \item \textbf{Références médicales enrichies :} compléter les indicateurs, notamment poids-pour-taille pour les jeunes enfants et données cliniques plus complètes.
+    \item \textbf{Amélioration OCR :} intégrer des modèles plus adaptés aux documents médicaux locaux et améliorer la détection des champs.
+    \item \textbf{Notifications avancées :} ajouter e-mail, notifications navigateur ou application mobile.
+    \item \textbf{Assistant santé renforcé :} améliorer le contexte, la traçabilité des réponses et les tests de sécurité conversationnelle.
+    \item \textbf{Version mobile :} proposer une application mobile pour faciliter l'utilisation quotidienne par les parents.
+    \item \textbf{Durcissement production :} HTTPS, gestion avancée des secrets, sauvegardes, politique de rétention et conformité réglementaire.
+    \item \textbf{Tests utilisateurs :} faire tester la plateforme par des parents et médecins afin d'améliorer l'ergonomie.
 \end{enumerate}
 
-Ce projet m'a permis de mettre en pratique les connaissances acquises tout au long de ma formation en génie logiciel : méthodologie Scrum, conception UML, développement web moderne, et gestion de projet. Il m'a également sensibilisé aux enjeux de la santé numérique et à l'importance de la rigueur dans le traitement des données médicales.
+En conclusion, ChildCare+ constitue une solution PFE avancée et cohérente. Elle répond aux objectifs principaux du sujet : centraliser le dossier enfant, suivre la croissance, rendre les informations plus compréhensibles, faciliter la collaboration parent-médecin et assurer un niveau de sécurité adapté à un prototype académique.

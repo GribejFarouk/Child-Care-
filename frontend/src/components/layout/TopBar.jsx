@@ -1,12 +1,37 @@
-import { Menu, Bell, Search, Hand } from 'lucide-react';
+import { Menu, Bell, Hand } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { currentUser } from '../../data/mockData';
+import { useAuth } from '../../contexts/AuthContext';
+import { useState, useEffect } from 'react';
+import { notificationService } from '../../api/notifications';
 
 export default function TopBar({ onMenuClick }) {
   const navigate = useNavigate();
-  /* Context-aware greeting */
+  const { user } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const notifs = await notificationService.getNotifications();
+        const unread = notifs.filter(n => !n.is_read).length;
+        setUnreadCount(unread);
+      } catch (err) {
+        console.error('Error fetching notifications:', err);
+      }
+    };
+
+    if (user) {
+      fetchNotifications();
+      const interval = setInterval(fetchNotifications, 60000); // 60s
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
+
+  const firstName = user?.first_name || user?.firstName || 'Utilisateur';
+  const initial = firstName.charAt(0).toUpperCase();
 
   return (
     <header className="bg-white/70 backdrop-blur-2xl border-b border-gray-100 h-16 flex items-center justify-between px-4 md:px-6 sticky top-0 z-30">
@@ -19,43 +44,32 @@ export default function TopBar({ onMenuClick }) {
         </button>
         <h1 className="text-lg font-bold text-gray-900 md:hidden tracking-tight">ChildCare+</h1>
 
-        {/* Desktop greeting */}
         <span className="hidden md:block text-sm text-gray-500 font-medium">
-          {greeting}, <span className="text-gray-900">{currentUser.firstName}</span> <Hand className="inline h-4 w-4 text-primary-400" />
+          {greeting}, <span className="text-gray-900">{firstName}</span>{' '}
+          <Hand className="inline h-4 w-4 text-primary-400" />
         </span>
       </div>
 
       <div className="flex items-center gap-2">
-        {/* Search button */}
         <button
           type="button"
-          onClick={() => navigate('/children')}
-          className="hidden sm:flex items-center gap-2 px-3 py-2 text-sm text-gray-400 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200/60 hover:border-gray-300 transition-all"
-        >
-          <Search size={16} />
-          <span>Rechercher...</span>
-          <kbd className="ml-4 text-xs bg-white px-1.5 py-0.5 rounded border border-gray-200 text-gray-400 font-mono">⌘K</kbd>
-        </button>
-
-        {/* Notification bell */}
-        <button
-          type="button"
-          onClick={() => navigate('/alerts')}
+          onClick={() => navigate('/notifications')}
           className="relative p-2.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all"
         >
           <Bell size={20} />
-          <span className="absolute top-2 right-2 block h-2 w-2 rounded-full bg-danger-500 ring-2 ring-white">
-            <span className="absolute inset-0 rounded-full bg-danger-500 animate-pulse-ring" />
-          </span>
+          {unreadCount > 0 && (
+            <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-danger-500 text-[9px] font-bold text-white ring-2 ring-white">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
         </button>
 
-        {/* User Avatar */}
         <button
           type="button"
           onClick={() => navigate('/settings')}
           className="h-9 w-9 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-sm font-bold shadow-sm cursor-pointer hover:shadow-md hover:scale-105 transition-all"
         >
-          {currentUser.firstName.charAt(0)}
+          {initial}
         </button>
       </div>
     </header>

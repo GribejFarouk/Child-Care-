@@ -1,74 +1,54 @@
 @startuml seq_health_alert
 !theme plain
-skinparam backgroundColor #FEFEFE
+skinparam backgroundColor #FFFFFF
 skinparam sequenceMessageAlign center
 skinparam responseMessageBelowArrow true
-skinparam maxMessageSize 200
+skinparam maxMessageSize 120
+skinparam shadowing false
 
-title Diagramme de Séquence 5 — Génération et Consultation des Alertes Santé
+title Sequence - Generation et consultation des alertes de sante
 
-actor "Parent" as User
-participant "Interface React\n(Frontend)" as UI
-participant "Serveur API\n(Backend)" as API
-participant "Moteur d'Alertes" as AlertEngine
-participant "Service de\nNotifications" as Notif
-database "Base de Données" as DB
+actor "Parent" as Parent
+actor "Medecin autorise" as Doctor
+participant "Frontend React" as UI
+participant "Analytics Service" as Analytics
+participant "Collaboration Service" as Collab
+database "Base de donnees analytics" as DB
 
-== Déclenchement automatique (après ajout de mesure) ==
-
-API -> AlertEngine : Nouvelle mesure enregistrée\n{childId, weight, height, date}
-AlertEngine -> DB : SELECT standards OMS\nWHERE age = ? AND sex = ?
-DB --> AlertEngine : Percentiles de référence\n(P3, P50, P97)
-
-AlertEngine -> AlertEngine : Analyse :\n1. Poids < P3 ou > P97 ?\n2. Taille < P3 ou > P97 ?\n3. Variation brusque vs mesure précédente ?\n4. IMC hors normes ?
-
-alt Aucune anomalie détectée
-    AlertEngine --> API : Pas d'alerte nécessaire
-else Anomalie détectée (ex: poids < P3)
-    AlertEngine -> AlertEngine : Détermine la sévérité :\n- danger : hors P3/P97\n- warning : tendance préoccupante\n- info : rappel vaccination
-    
-    AlertEngine -> DB : INSERT INTO alerts\n(child_id, type, priority,\ntitle, message, date)
-    DB --> AlertEngine : Alerte créée (id)
-    
-    AlertEngine -> Notif : Envoie notification push
-    Notif --> User : 🔔 Notification :\n"Alerte poids pour {enfant}"
+== Generation d'une alerte apres saisie d'une mesure ==
+Analytics -> Analytics : Appliquer regles sur la nouvelle mesure
+alt Valeur hors norme (ex. IMC eleve, croissance atypique)
+  Analytics -> DB : Enregistrer l'alerte avec titre et recommandation
+else Aucune anomalie detectee
+  Analytics -> Analytics : Aucune alerte creee
 end
 
-== Consultation des alertes ==
-
-User -> UI : Accède au Centre d'Alertes\n(via cloche ou sidebar)
-UI -> API : GET /api/alerts\n?read={all|true|false}&type={filter}
-API -> DB : SELECT * FROM alerts\nWHERE parent_id = ?\nORDER BY date DESC
-DB --> API : Liste des alertes
-API --> UI : 200 OK [{alerts}]
-
-UI --> User : Affiche la liste des alertes\n(icônes par type, badges de priorité,\nstatut lu/non-lu)
-
-== Interaction avec une alerte ==
-
-User -> UI : Clique sur une alerte
-UI -> API : PATCH /api/alerts/{id}\n{read: true}
-API -> DB : UPDATE alerts\nSET read = true\nWHERE id = ?
-DB --> API : OK
-API --> UI : 200 OK
-
-UI --> User : Alerte marquée comme lue\n(style visuel atténué)
-
-== Marquer toutes comme lues ==
-
-User -> UI : Clique "Tout marquer comme lu"
-UI -> API : PATCH /api/alerts/mark-all-read
-API -> DB : UPDATE alerts\nSET read = true\nWHERE parent_id = ?
-DB --> API : OK
-API --> UI : 200 OK
-UI --> User : Toutes les alertes\npassent en style "lu"
-
-note over UI, User
-    **Avertissement médical permanent :**
-    "Les alertes sont générées automatiquement
-    à titre informatif. Elles ne constituent pas
-    un diagnostic médical. En cas de doute,
-    consultez votre pédiatre."
+note over Analytics
+  Alertes informatives uniquement.
+  Ne constituent pas un diagnostic medical.
+  Accompagnees d'une recommandation de consulter un pediatre.
 end note
+
+== Consultation des alertes par le parent ==
+Parent -> UI : Ouvrir le centre d'alertes
+UI -> Analytics : Demander les alertes du parent
+Analytics -> DB : Recuperer les alertes du parent connecte
+Analytics --> UI : Liste des alertes
+UI --> Parent : Afficher les alertes avec disclaimer medical
+
+== Consultation des alertes par un medecin autorise ==
+Doctor -> UI : Ouvrir le dossier partage d'un patient
+UI -> Analytics : Demander les alertes de l'enfant
+Analytics -> Collab : Verifier la permission "alerts" pour ce medecin et cet enfant
+Collab --> Analytics : Acces autorise ou refuse
+
+alt Acces autorise
+  Analytics -> DB : Recuperer les alertes de l'enfant
+  Analytics --> UI : Liste des alertes filtrees
+  UI --> Doctor : Afficher les alertes du patient
+else Acces refuse
+  Analytics --> UI : 403 Acces interdit
+  UI --> Doctor : Message : section non partagee
+end
 
 @enduml

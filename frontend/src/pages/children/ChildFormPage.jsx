@@ -1,24 +1,50 @@
-import { useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Save, User, Calendar, Heart, Stethoscope, AlertTriangle } from 'lucide-react';
 import { staggerContainer, fadeUp } from '../../utils/motionPresets';
-import { children } from '../../data/mockData';
+import { getChild, createChild, updateChild } from '../../api/children';
 
 export default function ChildFormPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEdit = Boolean(id);
-  const existing = isEdit ? children.find((c) => c.id === Number(id)) : null;
 
   const [form, setForm] = useState({
-    name: existing?.name || '',
-    birthDate: existing?.birthDate || '',
-    sex: existing?.sex || 'M',
-    bloodType: existing?.bloodType || '',
-    allergies: existing?.allergies?.join(', ') || '',
-    pediatrician: existing?.pediatrician || '',
+    name: '',
+    birthDate: '',
+    sex: 'M',
+    bloodType: '',
+    allergies: '',
+    pediatrician: '',
   });
+
+  const [loading, setLoading] = useState(isEdit);
+  const [fetchError, setFetchError] = useState('');
+
+  useEffect(() => {
+    if (isEdit) {
+      const loadChild = async () => {
+        try {
+          const child = await getChild(id);
+          const fullName = child.first_name ? `${child.first_name} ${child.last_name || ''}`.trim() : child.name;
+          setForm({
+            name: fullName || '',
+            birthDate: child.date_of_birth || child.birthDate || '',
+            sex: child.sex || 'M',
+            bloodType: child.blood_group || child.bloodType || '',
+            allergies: Array.isArray(child.allergies) ? child.allergies.join(', ') : (child.allergies || ''),
+            pediatrician: child.pediatrician || '',
+          });
+        } catch (error) {
+          setFetchError('Erreur de chargement du profil.');
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadChild();
+    }
+  }, [id, isEdit]);
 
   const [saved, setSaved] = useState(false);
   const [errors, setErrors] = useState({});
@@ -30,7 +56,7 @@ export default function ChildFormPage() {
     return errs;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) {
@@ -38,10 +64,33 @@ export default function ChildFormPage() {
       return;
     }
     setErrors({});
-    setSaved(true);
-    setTimeout(() => {
-      navigate(isEdit ? `/children/${id}` : '/children');
-    }, 1200);
+    
+    try {
+      const first_name = form.name.split(' ')[0] || '';
+      const last_name = form.name.split(' ').slice(1).join(' ') || '';
+      const apiData = {
+        first_name,
+        last_name,
+        date_of_birth: form.birthDate,
+        sex: form.sex,
+        blood_group: form.bloodType,
+        allergies: form.allergies.split(',').map(a => a.trim()).filter(Boolean),
+        pediatrician: form.pediatrician,
+      };
+
+      if (isEdit) {
+        await updateChild(id, apiData);
+      } else {
+        await createChild(apiData);
+      }
+
+      setSaved(true);
+      setTimeout(() => {
+        navigate('/children');
+      }, 1200);
+    } catch (error) {
+      setErrors({ global: 'Erreur lors de la sauvegarde.' });
+    }
   };
 
   const handleChange = (field, value) => {
@@ -57,9 +106,16 @@ export default function ChildFormPage() {
         </button>
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">{isEdit ? 'Modifier le profil' : 'Nouveau profil'}</h1>
-          <p className="text-sm text-gray-400 mt-0.5">{isEdit ? `Modifier les informations de ${existing?.name}` : 'Ajoutez les informations de votre enfant'}</p>
+          <p className="text-sm text-gray-400 mt-0.5">{isEdit ? `Modifier les informations de l'enfant` : 'Ajoutez les informations de votre enfant'}</p>
         </div>
       </motion.div>
+
+      {loading && <div className="text-center py-10 text-gray-500">Chargement...</div>}
+      {fetchError && <div className="text-center py-10 text-red-500">{fetchError}</div>}
+      {errors.global && <div className="text-center py-4 text-red-500">{errors.global}</div>}
+
+      {!loading && !fetchError && (
+        <>
 
       {saved && (
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 p-4 rounded-2xl bg-success-50 border border-success-100 flex items-center gap-3">
@@ -175,6 +231,8 @@ export default function ChildFormPage() {
           </button>
         </div>
       </motion.form>
+      </>
+      )}
     </motion.div>
   );
 }

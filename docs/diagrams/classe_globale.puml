@@ -1,0 +1,162 @@
+@startuml classe_globale
+!theme plain
+hide circle
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor #F8FAFC
+  BorderColor #CBD5E1
+  ArrowColor #64748B
+}
+
+title Diagramme de classes simplifie - ChildCare+
+
+class User {
+  uuid id
+  string email
+  string role : parent | doctor
+  string first_name
+  string last_name
+  string phone
+  bool is_active
+}
+
+class ParentProfile {
+  uuid user_id
+  string city
+  string preferred_language
+}
+
+class DoctorProfile {
+  uuid user_id
+  string specialty
+  string clinic_name
+}
+
+class Child {
+  uuid id
+  uuid parent_id
+  string first_name
+  date date_of_birth
+  string sex : M | F
+  string photo_url
+}
+
+class Measurement {
+  uuid id
+  uuid child_id
+  uuid parent_id
+  date date_recorded
+  int age_at_recording_months
+  decimal weight_kg
+  decimal height_cm
+  decimal bmi
+  decimal head_circumference_cm
+  decimal foot_size_cm
+  decimal ear_size_cm
+  decimal neck_circumference_cm
+  decimal wrist_circumference_cm
+  string source
+  string notes
+}
+
+note right of Measurement
+  Une seule table "measurements".
+  Chaque ligne = une session de mesure
+  pour un enfant a une date donnee.
+  Toutes les colonnes metriques
+  sont optionnelles.
+end note
+
+class Alert {
+  uuid id
+  uuid child_id
+  uuid parent_id
+  uuid measurement_id
+  string alert_type
+  string severity
+  string title
+  string message
+  string recommendation
+  bool is_read
+}
+
+class HealthEvent {
+  uuid id
+  uuid child_id
+  uuid parent_id
+  string event_type
+  date scheduled_date
+  string status
+  string notes
+}
+
+class OCRImport {
+  uuid id
+  uuid child_id
+  uuid parent_id
+  string status
+  string raw_text
+  json extracted_data
+  json warnings
+}
+
+class ChildShare {
+  uuid id
+  uuid parent_id
+  uuid child_id
+  uuid doctor_id
+  string doctor_email
+  string doctor_display_name
+  string sharing_code
+  string status : pending | active | revoked
+  json permissions
+}
+
+class Message {
+  uuid id
+  uuid share_id
+  uuid sender_id
+  string sender_role
+  string content
+  bool is_read
+}
+
+class GrowthReference {
+  uuid id
+  string sex : M | F
+  int age_months
+  string metric
+  decimal p3
+  decimal p50
+  decimal p97
+  string source : WHO
+}
+
+note right of GrowthReference
+  Courbes de reference OMS.
+  P3 = seuil bas, P50 = mediane,
+  P97 = seuil haut.
+  Donnees indicatives - interpretation
+  par professionnel de sante.
+end note
+
+User "1" -- "0..1" ParentProfile
+User "1" -- "0..1" DoctorProfile
+User "1" -- "0..*" Child : parent
+Child "1" -- "0..*" Measurement
+Child "1" -- "0..*" Alert
+Child "1" -- "0..*" HealthEvent
+Child "1" -- "0..*" OCRImport
+Child "1" -- "0..*" ChildShare
+ChildShare "1" -- "0..*" Message
+User "1" -- "0..*" ChildShare : doctor
+
+note bottom
+  Les identifiants inter-services sont des UUID.
+  Il n'y a pas de cle etrangere directe entre bases separees.
+  Chaque service possede sa propre base PostgreSQL.
+end note
+
+@enduml

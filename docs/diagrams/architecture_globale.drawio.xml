@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="0m0k2C8L7D_o3yszJnO9">
+    <mxGraphModel dx="1768" dy="929" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;" value="Parent / Medecin" vertex="1">
+          <mxGeometry height="80" width="40" x="40" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend" parent="1" style="swimlane;whiteSpace=wrap;html=1;strokeWidth=3;" value="Frontend" vertex="1">
+          <mxGeometry height="150" width="220" x="135" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="react" parent="frontend" style="rounded=0;whiteSpace=wrap;html=1;" value="React + Vite&#xa;localhost:5173" vertex="1">
+          <mxGeometry height="70" width="150" x="35" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="docker" parent="1" style="swimlane;whiteSpace=wrap;html=1;strokeWidth=3;fillColor=#FFFFFF;" value="Docker Compose" vertex="1">
+          <mxGeometry height="780" width="1340" x="450" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nginx" parent="docker" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#FF9933,#99FF99);" value="Nginx Gateway&#xa;localhost:80" vertex="1">
+          <mxGeometry height="70" width="180" x="460" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="services" parent="docker" style="swimlane;whiteSpace=wrap;html=1;strokeWidth=2;strokeColor=light-dark(#007FFF,#007FFF);startSize=20;align=right;" value="Services Django REST" vertex="1">
+          <mxGeometry height="610" width="1020" x="40" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="auth" parent="services" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#00FF00,#00FF00);" value="Auth" vertex="1">
+          <mxGeometry height="60" width="120" x="870" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="profiles" parent="services" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#00FF00,#00FF00);" value="Profiles" vertex="1">
+          <mxGeometry height="60" width="120" x="20" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="analytics" parent="services" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#00FF00,#00FF00);" value="Analytics" vertex="1">
+          <mxGeometry height="60" width="120" x="340" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="calendar" parent="services" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#00FF00,#00FF00);" value="Calendar" vertex="1">
+          <mxGeometry height="60" width="120" x="520" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="collab" parent="services" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#00FF00,#00FF00);" value="Collaboration" vertex="1">
+          <mxGeometry height="60" width="140" x="440" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="c1" edge="1" parent="services" source="profiles" style="dashed=1;endArrow=open;" target="collab">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="80" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c3" edge="1" parent="services" source="analytics" style="dashed=1;endArrow=open;" target="collab">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="400" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4" edge="1" parent="services" source="calendar" style="dashed=1;endArrow=open;" target="collab">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ocr" parent="services" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#00FF00,#00FF00);" value="OCR" vertex="1">
+          <mxGeometry height="60" width="120" x="110" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="c5" edge="1" parent="services" source="ocr" style="dashed=1;endArrow=open;" target="collab">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="170" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-3" edge="1" parent="services" source="profiles" target="ocr" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="610" y="123" as="sourcePoint" />
+            <mxPoint x="1300" y="161" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="measurements" parent="services" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#00FF00,#00FF00);" value="Measurements" vertex="1">
+          <mxGeometry height="60" width="120" x="210" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-4" edge="1" parent="services" source="ocr" target="measurements" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="790" y="124" as="sourcePoint" />
+            <mxPoint x="1300" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c2" edge="1" parent="services" source="measurements" style="dashed=1;endArrow=open;" target="collab">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-7" parent="services" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#00FF00,#00FF00);" value="notifications" vertex="1">
+          <mxGeometry height="60" width="120" x="600" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-9" edge="1" parent="services" source="K50TGc4g2SiNtimaFmmG-7" style="dashed=1;endArrow=open;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" target="collab">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="510" />
+            </Array>
+            <mxPoint x="677.5" y="220" as="sourcePoint" />
+            <mxPoint x="642.5" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-11" parent="services" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#00FF00,#00FF00);" value="Audit" vertex="1">
+          <mxGeometry height="60" width="120" x="710" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-13" parent="services" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#00FF00,#00FF00);" value="Assistant" vertex="1">
+          <mxGeometry height="60" width="120" x="790" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="db" parent="docker" style="shape=cylinder;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=light-dark(#FF3333,#FF3333);" value="PostgreSQL&#xa;une base par service" vertex="1">
+          <mxGeometry height="90" width="140" x="1160" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="note" parent="docker" style="shape=note;whiteSpace=wrap;html=1;size=16;" value="JWT partage entre services.&#xa;Chaque service valide le token." vertex="1">
+          <mxGeometry height="50" width="190" x="1130" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="docker" source="nginx" style="entryX=0.75;entryY=0;entryDx=0;entryDy=0;" target="auth" value="/api/auth">
+          <mxGeometry relative="1" x="-0.1356" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1000" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="docker" source="nginx" target="profiles" value="/api/profiles">
+          <mxGeometry relative="1" x="0.4493" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="120" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="docker" source="nginx" target="measurements" value="/api/measurements">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="docker" source="nginx" target="analytics" value="/api/analytics">
+          <mxGeometry relative="1" x="0.2013" y="6" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="440" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="docker" source="nginx" target="ocr" value="/api/ocr">
+          <mxGeometry relative="1" x="0.802" y="6" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="240" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="docker" source="nginx" target="calendar" value="/api/calendar">
+          <mxGeometry relative="1" x="-0.1059" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="620" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="docker" source="nginx" target="collab" value="/api/collaboration">
+          <mxGeometry relative="1" x="-0.6667" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="d1" edge="1" parent="docker" source="auth" target="db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="d2" edge="1" parent="docker" source="ocr" style="exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="db">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="50" y="260" />
+              <mxPoint x="50" y="610" />
+              <mxPoint x="860" y="610" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="d4" edge="1" parent="docker" source="analytics" style="entryX=0.15;entryY=0.95;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" target="db">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="550" />
+              <mxPoint x="850" y="550" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="d5" edge="1" parent="docker" source="measurements" style="exitX=0.75;exitY=1;exitDx=0;exitDy=0;" target="db">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="570" />
+              <mxPoint x="850" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="d6" edge="1" parent="docker" source="calendar" style="exitX=0.75;exitY=1;exitDx=0;exitDy=0;" target="db">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="650" y="560" />
+              <mxPoint x="850" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="d7" edge="1" parent="docker" source="collab" target="db">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="850" y="690" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-5" edge="1" parent="docker" source="profiles" style="exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="db">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="150" y="590" />
+              <mxPoint x="850" y="590" />
+            </Array>
+            <mxPoint x="190" y="392" as="sourcePoint" />
+            <mxPoint x="980" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-6" edge="1" parent="docker" source="auth" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="note" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="370" y="390" as="sourcePoint" />
+            <mxPoint x="420" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-8" edge="1" parent="docker" source="nginx" style="exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="K50TGc4g2SiNtimaFmmG-7" value="/api/notifications">
+          <mxGeometry relative="1" x="0.399" y="-20" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="700" y="180" />
+            </Array>
+            <mxPoint x="634" y="115" as="sourcePoint" />
+            <mxPoint x="690" y="405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-10" edge="1" parent="docker" source="K50TGc4g2SiNtimaFmmG-7" style="entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" target="db">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="730" y="680" />
+              <mxPoint x="840" y="680" />
+            </Array>
+            <mxPoint x="460" y="434" as="sourcePoint" />
+            <mxPoint x="1171" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-12" edge="1" parent="docker" source="nginx" style="exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="K50TGc4g2SiNtimaFmmG-11" value="/api/audit">
+          <mxGeometry relative="1" x="0.1957" y="-20" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="810" y="200" />
+            </Array>
+            <mxPoint x="690" y="230" as="sourcePoint" />
+            <mxPoint x="795" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-14" edge="1" parent="docker" source="K50TGc4g2SiNtimaFmmG-11" style="exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.556;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;" target="db">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="810" y="530" />
+              <mxPoint x="850" y="530" />
+            </Array>
+            <mxPoint x="770" y="660" as="sourcePoint" />
+            <mxPoint x="1240" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-15" edge="1" parent="docker" source="nginx" style="exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="K50TGc4g2SiNtimaFmmG-13" value="/api/assistant">
+          <mxGeometry relative="1" x="0.491" y="-16" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="890" y="210" />
+            </Array>
+            <mxPoint x="810" y="210" as="sourcePoint" />
+            <mxPoint x="980" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="K50TGc4g2SiNtimaFmmG-16" edge="1" parent="docker" source="K50TGc4g2SiNtimaFmmG-13" style="entryX=0.15;entryY=0.95;entryDx=0;entryDy=0;entryPerimeter=0;" target="db">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="890" y="470" />
+            </Array>
+            <mxPoint x="880" y="660" as="sourcePoint" />
+            <mxPoint x="1308" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="user" target="react">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="react" target="nginx" value="HTTP /api/*">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

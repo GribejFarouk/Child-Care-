@@ -1,0 +1,70 @@
+@startuml architecture_globale
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam ArrowColor #64748B
+skinparam component {
+  BackgroundColor #F8FAFC
+  BorderColor #CBD5E1
+}
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #10B981
+}
+
+title Architecture globale simplifiee - ChildCare+
+
+actor "Parent / Medecin" as User
+
+node "Frontend" as FEHost {
+  component "React + Vite\nlocalhost:5173" as ReactUI
+}
+
+node "Docker Compose" {
+  component "Nginx Gateway\nlocalhost:80" as Nginx
+
+  rectangle "Services Django REST" {
+    component "Auth" as Auth
+    component "Profiles" as Profiles
+    component "Measurements" as Measurements
+    component "Analytics" as Analytics
+    component "OCR" as OCR
+    component "Calendar" as Calendar
+    component "Collaboration" as Collaboration
+  }
+
+  database "PostgreSQL\nune base par service" as DB
+}
+
+User --> ReactUI
+ReactUI --> Nginx : HTTP /api/*
+
+Nginx --> Auth : /api/auth
+Nginx --> Profiles : /api/profiles
+Nginx --> Measurements : /api/measurements
+Nginx --> Analytics : /api/analytics
+Nginx --> OCR : /api/ocr
+Nginx --> Calendar : /api/calendar
+Nginx --> Collaboration : /api/collaboration
+
+Auth --> DB
+Profiles --> DB
+Measurements --> DB
+Analytics --> DB
+OCR --> DB
+Calendar --> DB
+Collaboration --> DB
+
+Profiles ..> Collaboration : verification acces medecin
+Measurements ..> Collaboration : verification acces medecin
+Analytics ..> Collaboration : verification acces medecin
+Calendar ..> Collaboration : verification acces medecin
+OCR ..> Collaboration : verification acces medecin
+
+note right of Auth
+  JWT partage entre services.
+  Chaque service valide le token.
+end note
+
+@enduml

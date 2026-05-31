@@ -1,31 +1,25 @@
 % ============================================================================
-% Introduction Générale
+% Introduction Generale
 % ============================================================================
 \chapter*{Introduction Générale}
 \addcontentsline{toc}{chapter}{Introduction Générale}
 \markboth{Introduction Générale}{Introduction Générale}
 
-Le suivi de la santé infantile constitue un enjeu majeur pour les familles et les professionnels de la santé. Dès les premières semaines de vie, la surveillance régulière de la croissance --- poids, taille, périmètre crânien --- ainsi que le respect du calendrier vaccinal et la détection précoce d'éventuelles anomalies sont essentiels au bon développement de l'enfant. En Tunisie, ce suivi repose encore largement sur des carnets de santé papier, des visites périodiques chez le pédiatre et des pratiques manuelles souvent sujettes à l'oubli ou à la perte d'information.
+La santé infantile nécessite un suivi régulier, structuré et compréhensible par les parents. Dès les premiers mois de vie, les mesures de croissance, les vaccinations, les consultations, les documents médicaux et les échanges avec les professionnels de santé constituent un historique important. Lorsque ces informations sont dispersées entre carnet papier, photos, ordonnances et messages, il devient difficile de garder une vision complète de l'évolution de l'enfant.
 
-Dans un contexte de transformation numérique croissante, les applications mobiles et web de santé se multiplient à l'échelle mondiale. Toutefois, les solutions existantes présentent des limitations notables : interfaces peu adaptées au contexte tunisien, absence de référence aux normes de l'Organisation Mondiale de la Santé (OMS), fragmentation des données entre plusieurs outils, ou encore manque de fonctionnalités d'alerte intelligente.
+Dans ce contexte, la transformation numérique offre des moyens efficaces pour centraliser les données, visualiser les courbes de croissance, rappeler les rendez-vous, faciliter le partage contrôlé avec un médecin et produire des explications plus accessibles aux familles. Toutefois, le domaine médical impose des exigences particulières : les données sont sensibles, les permissions doivent être maîtrisées, et les messages affichés ne doivent jamais remplacer un diagnostic professionnel.
 
-C'est dans ce cadre que s'inscrit le projet \textbf{ChildCare+}, une plateforme numérique de suivi de la santé infantile. Ce projet de fin d'études, réalisé dans le cadre de la Licence en Génie Logiciel et Système d'Information à l'Université de Monastir, vise à concevoir et développer une application web complète permettant aux parents de :
-\begin{itemize}
-    \item Enregistrer et consulter les données de croissance de leurs enfants ;
-    \item Visualiser l'évolution sur des courbes de croissance conformes aux normes OMS ;
-    \item Recevoir des alertes intelligentes en cas de déviation par rapport aux seuils normaux ;
-    \item Numériser des documents médicaux grâce à la reconnaissance optique de caractères (OCR) ;
-    \item Suivre une grossesse en cours avec des jalons et des rappels personnalisés.
-\end{itemize}
+Le projet \textbf{ChildCare+} s'inscrit dans cette problématique. Il consiste à concevoir et développer une plateforme web de suivi de santé et de nutrition des enfants. L'application propose un espace parent et un espace médecin. Elle permet de gérer les profils enfants, de saisir les mesures anthropométriques, de consulter les courbes de croissance selon les références OMS, d'importer des documents médicaux par OCR, de gérer un calendrier médical, de recevoir des notifications, de partager un dossier avec un médecin selon des permissions sélectives et de communiquer par messagerie ou lien de consultation.
 
-L'application adopte une architecture orientée microservices afin de garantir la scalabilité, la maintenabilité et la modularité du système. Le développement suit la méthodologie agile Scrum, avec une démarche incrémentale organisée en sprints.
+Le projet a évolué progressivement afin de passer d'une interface initialement simulée à une plateforme connectée à un backend réel. L'architecture finale repose sur React, Django REST Framework, PostgreSQL, Docker Compose et Nginx. Plusieurs services spécialisés ont été développés : authentification, profils, mesures, analyse, OCR, calendrier, collaboration, notifications, audit et assistant santé. Les recommandations et explications sont séparées en deux niveaux : un moteur déterministe basé sur les références et règles validées, puis un assistant IA chargé uniquement de reformuler ces résultats en langage simple.
 
-\vspace{0.5cm}
-Le présent rapport est structuré en quatre chapitres :
+
+Le rapport est organisé comme suit :
 
 \begin{itemize}
-    \item \textbf{Chapitre 1 --- Cadre général du projet :} présente le contexte, la problématique, les objectifs du projet, l'étude de l'existant et la méthodologie adoptée.
-    \item \textbf{Chapitre 2 --- Analyse et spécification des besoins :} identifie les acteurs, les besoins fonctionnels et non fonctionnels, et formalise les cas d'utilisation.
-    \item \textbf{Chapitre 3 --- Conception :} détaille l'architecture logicielle, les modèles de données et les diagrammes de séquence.
-    \item \textbf{Chapitre 4 --- Réalisation :} présente l'environnement technique, les interfaces développées et l'état d'avancement actuel du projet.
+    \item \textbf{Chapitre 1 -- Cadre général du projet :} présente l'organisme d'accueil, le contexte, la problématique, les objectifs, l'étude de l'existant et la méthodologie suivie.
+    \item \textbf{Chapitre 2 -- Analyse et spécification des besoins :} identifie les acteurs, décrit les besoins fonctionnels et non fonctionnels, puis formalise les principaux cas d'utilisation.
+    \item \textbf{Chapitre 3 -- Conception :} détaille l'architecture microservices, le modèle de données, les mécanismes de sécurité et les diagrammes de conception.
+    \item \textbf{Chapitre 4 -- Réalisation :} présente l'environnement technique, les services développés, les interfaces réalisées, les tests et les limites du prototype.
+    \item \textbf{Conclusion générale :} synthétise les résultats obtenus et propose les perspectives d'amélioration.
 \end{itemize}

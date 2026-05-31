@@ -3,7 +3,6 @@ import { Outlet } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Sidebar from '../components/layout/Sidebar';
 import TopBar from '../components/layout/TopBar';
-import FAB from '../components/ui/FAB';
 import ToastHost from '../components/ui/ToastHost';
 import { pageTransition } from '../utils/motionPresets';
 
@@ -35,8 +34,6 @@ export default function MainLayout() {
         </main>
       </div>
 
-      {/* Global Floating Action Button */}
-      <FAB />
       <ToastHost />
     </div>
   );

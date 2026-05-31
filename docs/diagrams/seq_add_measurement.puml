@@ -1,63 +1,49 @@
 @startuml seq_add_measurement
 !theme plain
-skinparam backgroundColor #FEFEFE
+skinparam backgroundColor #FFFFFF
 skinparam sequenceMessageAlign center
 skinparam responseMessageBelowArrow true
-skinparam maxMessageSize 200
+skinparam maxMessageSize 120
+skinparam shadowing false
 
-title Diagramme de Séquence 2 — Saisie Manuelle de Mesure & Validation
+title Sequence - Saisie d'une mesure et analyse preliminaire
 
-actor "Parent" as User
-participant "Interface React\n(Frontend)" as UI
-participant "Service de\nValidation" as Validator
-participant "Serveur API\n(Backend)" as API
-participant "Moteur d'Alertes" as AlertEngine
-database "Base de Données" as DB
+actor "Parent" as Parent
+participant "Frontend React" as UI
+participant "Measurements Service" as Measures
+database "Base de donnees mesures" as MDb
+participant "Analytics Service" as Analytics
+database "Base de donnees analytics" as ADb
 
-User -> UI : Clique sur FAB "+" ou\n"Ajouter une mesure"
-UI --> User : Affiche le formulaire de mesure\n(poids, taille, périmètre crânien, date)
+Parent -> UI : Naviguer vers le dossier de l'enfant
+Parent -> UI : Cliquer sur "Ajouter une mesure"
+UI -> UI : Afficher le formulaire avec l'enfant deja selectionne
+Parent -> UI : Remplir date, poids, taille, perimetre cranien (et autres si disponibles)
+UI -> UI : Valider les donnees (date passee, valeurs positives, plages raisonnables)
+UI -> UI : Calculer l'IMC automatiquement si poids et taille fournis
+UI -> UI : Calculer l'age en mois de l'enfant a la date de mesure
 
-User -> UI : Remplit et soumet le formulaire
+UI -> Measures : Envoyer la mesure pour enregistrement
+Measures -> Measures : Injecter parent_id depuis le JWT (securise)
+Measures -> Measures : Calculer et enregistrer l'IMC cote serveur
+Measures -> MDb : Enregistrer la mesure dans la table "measurements"
+Measures --> UI : Confirmer l'enregistrement
 
-UI -> Validator : Valide les données côté client
-Validator -> Validator : Vérifie :\n- Champs requis non vides\n- Poids > 0 et < 50 kg\n- Taille > 0 et < 200 cm\n- Date ≤ aujourd'hui
+UI -> Analytics : Declencher l'analyse de la mesure (appel non bloquant)
+Analytics -> Analytics : Appliquer regles preliminaires
 
-alt Validation échouée
-    Validator --> UI : Liste des erreurs
-    UI --> User : Affiche les erreurs\n(champs en rouge + messages)
-else Validation réussie
-    Validator --> UI : Données valides
-
-    UI -> API : POST /api/children/{childId}/measurements\n{weight, height, headCirc, date, notes}
-    API -> API : Validation côté serveur\n(double vérification)
-    
-    alt Données invalides côté serveur
-        API --> UI : 422 Unprocessable Entity\n{errors: [...]}
-        UI --> User : Affiche les erreurs serveur
-    else Données valides
-        API -> DB : INSERT INTO measurements\n(child_id, weight, height, head_circ, date, notes)
-        DB --> API : Mesure enregistrée (id)
-        
-        == Vérification des seuils ==
-        
-        API -> AlertEngine : Vérifie les seuils OMS\n(percentiles P3, P97)
-        AlertEngine -> DB : SELECT mesures récentes\n+ standards OMS pour l'âge
-        DB --> AlertEngine : Historique + références
-        AlertEngine -> AlertEngine : Compare avec percentiles\nP3 et P97
-        
-        alt Mesure hors seuils (< P3 ou > P97)
-            AlertEngine -> DB : INSERT INTO alerts\n(type: "warning", child_id, message)
-            AlertEngine --> API : Alerte générée
-            API --> UI : 201 Created\n{measurement, alert}
-            UI --> User : ✅ Mesure enregistrée\n⚠️ Notification d'alerte affichée
-        else Mesure dans les normes
-            AlertEngine --> API : Aucune alerte
-            API --> UI : 201 Created\n{measurement}
-            UI --> User : ✅ "Mesure enregistrée avec succès"
-        end
-        
-        UI -> UI : Redirection vers le profil enfant\n(après 2 secondes)
-    end
+alt Valeur anormale detectee
+  Analytics -> ADb : Creer une alerte informative
+  Analytics --> UI : Alertes creees
+else Aucune anomalie detectee
+  Analytics --> UI : Aucune alerte
 end
+
+UI --> Parent : Confirmation + retour au dossier de l'enfant
+
+note over UI, Measures
+  L'enfant est toujours determine depuis la route.
+  Il n'est jamais selectionne automatiquement sans confirmation.
+end note
 
 @enduml

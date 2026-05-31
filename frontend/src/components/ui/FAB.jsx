@@ -1,19 +1,28 @@
 import { Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { popIn } from '../../utils/motionPresets';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { children } from '../../data/mockData';
+import { listChildren } from '../../api/children';
 
 export default function FAB() {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [children, setChildren] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    listChildren()
+      .then((data) => setChildren(data || []))
+      .catch((err) => console.error("Error fetching children for FAB", err));
+  }, []);
 
   const handleClick = () => {
     // Navigate to add measurement for the first child, or generic page
     const firstChild = children[0];
     if (firstChild) {
       navigate(`/children/${firstChild.id}/measurements/add`);
+    } else {
+      navigate('/children/add');
     }
   };
 

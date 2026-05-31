@@ -1,170 +1,164 @@
 % ============================================================================
-% Chapitre 1 — Cadre Général du Projet
+% Chapitre 1 -- Cadre General du Projet
 % ============================================================================
 \chapter{Cadre Général du Projet}
 \label{chap:cadre-general}
 
 \section*{Introduction}
-Ce chapitre présente le contexte général dans lequel s'inscrit le projet ChildCare+. J'y expose la problématique identifiée, les objectifs visés, une étude comparative des solutions existantes, la solution que je propose ainsi que la méthodologie de développement adoptée.
+Ce chapitre introduit le cadre général du projet ChildCare+. Il présente l'organisme d'accueil, le contexte du sujet, la problématique, les objectifs, l'étude de l'existant, la solution proposée ainsi que la méthodologie de travail adoptée.
+
+% -------------------------------------------------------------------
+\section{Présentation de l'organisme d'accueil}
+\label{sec:organisme}
+
+Ce projet de fin d'études a été effectué à la \textbf{Faculté des Sciences de Monastir}, au sein du Département Informatique. La Faculté des Sciences de Monastir appartient à l'Université de Monastir et assure des formations universitaires dans plusieurs disciplines scientifiques et techniques.
+
+Le Département Informatique accompagne les étudiants dans l'acquisition de compétences en programmation, bases de données, génie logiciel, réseaux, systèmes d'information et développement web. Dans ce cadre, le Projet de Fin d'Études constitue une étape importante permettant de mettre en pratique les connaissances acquises pendant la formation de Licence en Génie Logiciel et Système d'Information.
 
 % -------------------------------------------------------------------
 \section{Contexte du projet}
 \label{sec:contexte}
 
-Le suivi de la santé infantile est un processus continu qui commence dès la grossesse et se poursuit tout au long de l'enfance et de l'adolescence. Il englobe la surveillance de la croissance physique (poids, taille, périmètre crânien), le suivi du calendrier vaccinal, la détection précoce d'anomalies de développement et l'accompagnement nutritionnel.
+Le suivi de la santé infantile est un processus continu. Il concerne la croissance physique, les vaccinations, les rendez-vous médicaux, les documents de santé et l'historique des échanges avec les professionnels. Pour les parents, ce suivi demande une organisation régulière et une bonne compréhension des informations collectées.
 
-En Tunisie, ce suivi repose encore majoritairement sur des supports papier --- carnets de santé, fiches de consultation pédiatrique --- dont la gestion manuelle présente plusieurs inconvénients : risque de perte, difficulté de partage entre professionnels de santé, absence de visualisation graphique de l'évolution et impossibilité de générer des alertes automatiques.
+Dans la pratique, les données de santé d'un enfant peuvent se trouver dans plusieurs supports : carnet de santé papier, ordonnances, résultats d'analyses, photographies de documents, messages envoyés au médecin ou simples notes personnelles. Cette dispersion rend la consultation de l'historique moins efficace et peut compliquer la détection d'une évolution inhabituelle.
 
-Le présent projet s'inscrit dans le cadre d'un \textbf{Projet de Fin d'Études (PFE)} pour l'obtention de la Licence en Génie Logiciel et Système d'Information à l'Université de Monastir, année universitaire 2025/2026.
+Le projet \textbf{ChildCare+} propose une réponse numérique à cette situation. Il vise à centraliser les informations utiles, à faciliter le suivi visuel de la croissance et à permettre un partage contrôlé du dossier avec un médecin. Le projet reste un prototype académique et ne prétend pas remplacer le jugement d'un professionnel de santé.
 
 % -------------------------------------------------------------------
 \section{Problématique}
 \label{sec:problematique}
 
-Les parents tunisiens font face à plusieurs difficultés dans le suivi de la santé de leurs enfants :
+Les principales difficultés observées sont les suivantes :
 
 \begin{itemize}
-    \item \textbf{Fragmentation des données :} les informations médicales sont dispersées entre différents supports (carnet papier, ordonnances, résultats d'analyses).
-    \item \textbf{Absence de suivi visuel :} il n'existe pas d'outil simple permettant de visualiser l'évolution de la croissance par rapport aux normes de l'OMS.
-    \item \textbf{Manque d'alertes :} aucun mécanisme automatisé ne prévient les parents en cas de déviation significative des indicateurs de santé.
-    \item \textbf{Saisie manuelle fastidieuse :} la transcription de données depuis des documents médicaux est chronophage et source d'erreurs.
-    \item \textbf{Absence de couverture de la grossesse :} peu de solutions intègrent le suivi prénatal et postnatal dans un même outil.
+    \item \textbf{Dispersion des données :} les informations médicales sont conservées dans plusieurs supports non reliés.
+    \item \textbf{Lecture difficile de l'évolution :} les mesures isolées ne permettent pas toujours au parent de comprendre la tendance de croissance.
+    \item \textbf{Oubli des événements médicaux :} vaccinations et consultations peuvent être manquées sans rappel organisé.
+    \item \textbf{Partage non structuré :} le médecin reçoit souvent les informations oralement ou sous forme de documents dispersés.
+    \item \textbf{Risque d'erreur de saisie :} la recopie manuelle des valeurs depuis des documents médicaux peut introduire des erreurs.
+    \item \textbf{Confidentialité :} les données de l'enfant doivent être accessibles uniquement aux personnes autorisées.
+    \item \textbf{Compréhension parentale :} les percentiles, l'IMC ou les alertes peuvent être difficiles à interpréter sans explication simple.
 \end{itemize}
 
-La question centrale est donc la suivante : \textit{comment concevoir une plateforme numérique unifiée, accessible et conforme aux normes médicales internationales, qui permette aux parents de suivre la santé de leurs enfants de la grossesse à l'adolescence ?}
+La problématique centrale peut donc être formulée ainsi :
+
+\begin{quote}
+Comment concevoir une plateforme web sécurisée permettant aux parents de suivre la santé et la nutrition de leurs enfants, de collaborer avec les médecins et d'obtenir des explications compréhensibles sans transformer l'application en outil de diagnostic ?
+\end{quote}
 
 % -------------------------------------------------------------------
 \section{Objectifs du projet}
 \label{sec:objectifs}
 
-Le projet ChildCare+ vise à atteindre les objectifs suivants :
+Les objectifs retenus pour ChildCare+ sont :
 
 \begin{enumerate}
-    \item \textbf{Centraliser les données de santé infantile} dans une plateforme web unique et sécurisée.
-    \item \textbf{Offrir des courbes de croissance interactives} conformes aux standards de l'OMS, avec calcul automatique des percentiles.
-    \item \textbf{Mettre en place un système d'alertes intelligentes} qui détecte les anomalies de croissance et notifie les parents.
-    \item \textbf{Intégrer un module OCR} pour la numérisation automatique de documents médicaux (carnets de santé, ordonnances).
-    \item \textbf{Proposer un suivi de grossesse} avec jalons hebdomadaires et rappels personnalisés.
-    \item \textbf{Garantir la sécurité et la confidentialité} des données médicales des enfants.
+    \item centraliser les informations de santé des enfants dans un dossier numérique ;
+    \item gérer les profils enfants et leurs informations médicales de base ;
+    \item enregistrer les mesures de croissance et calculer automatiquement l'IMC ;
+    \item afficher des courbes comparées aux références OMS disponibles ;
+    \item produire des alertes et constats cliniques déterministes, prudents et traçables ;
+    \item proposer des recommandations explicables en langage simple ;
+    \item assister le parent par un chatbot IA limité à l'explication des constats déjà validés ;
+    \item importer des documents médicaux par OCR avec validation manuelle obligatoire ;
+    \item organiser les vaccinations, rendez-vous et contrôles dans un registre médical ;
+    \item générer des notifications pour les rappels et événements importants ;
+    \item permettre le partage parent-médecin par code, permissions sélectives et révocation ;
+    \item offrir une messagerie et des liens de consultation audio/vidéo sans développer une infrastructure WebRTC interne ;
+    \item conserver un journal d'activité pour tracer les accès sensibles.
 \end{enumerate}
 
-\textbf{Note importante :} ChildCare+ est un outil d'organisation et de sensibilisation. Il ne remplace en aucun cas une consultation médicale professionnelle. Chaque alerte générée recommande systématiquement de consulter un médecin.
+\textbf{Limite médicale :} l'application fournit une aide au suivi et à la compréhension. Elle ne pose pas de diagnostic, ne prescrit pas de traitement et recommande l'avis d'un professionnel pour toute situation préoccupante.
 
 % -------------------------------------------------------------------
 \section{Étude de l'existant}
 \label{sec:etude-existant}
 
-Avant de concevoir ma solution, j'ai étudié les applications existantes de suivi de la santé infantile. Le tableau~\ref{tab:etude-existant} présente une comparaison des principales solutions disponibles.
+Plusieurs applications et outils existent déjà autour du suivi de l'enfant ou de
+l'évaluation de la croissance. Cependant, ils répondent généralement à une partie
+du besoin et ne couvrent pas toujours le parcours complet : suivi familial,
+références OMS, documents médicaux, collaboration avec le médecin, audit et
+explication en langage simple.
 
 \begin{table}[htbp]
 \centering
-\caption{Étude comparative des solutions existantes}
+\caption{Étude comparative de solutions existantes}
 \label{tab:etude-existant}
 \begin{tabularx}{\textwidth}{|l|X|X|}
 \hline
-\textbf{Solution} & \textbf{Points forts} & \textbf{Limitations} \\
+\textbf{Solution} & \textbf{Points forts} & \textbf{Limites} \\
 \hline
-\textbf{Baby Tracker} & Interface intuitive, suivi quotidien (sommeil, alimentation, couches) & Pas de courbes OMS, pas d'OCR, pas d'alertes automatiques \\
+Baby Tracker & Suivi quotidien simple : repas, sommeil, couches, notes et rappels de base. L'application est facile à utiliser pour les parents. & Approche centrée sur la routine du nourrisson ; peu de logique médicale structurée, pas de partage contrôlé par permissions avec un médecin. \\
 \hline
-\textbf{Growth Chart} (CDC) & Courbes de croissance officielles & Interface vétuste, pas de suivi multi-enfant, pas de numérisation \\
+Huckleberry & Accompagnement parental et recommandations autour du sommeil et des habitudes de l'enfant. & Les recommandations concernent surtout les routines ; le dossier médical, les courbes OMS et l'audit des accès ne sont pas le cœur de la solution. \\
 \hline
-\textbf{Carnet de santé papier} & Reconnu par le système de santé tunisien & Risque de perte, aucune visualisation, pas d'alertes \\
-\hline
-\textbf{Huckleberry} & IA pour prédiction des siestes, interface moderne & Payant, anglophone uniquement, pas de courbes OMS \\
+WHO Anthro / AnthroPlus & Outils de référence pour évaluer les mesures de croissance selon les standards OMS. & Outils spécialisés d'analyse ; ils ne proposent pas une expérience parent complète avec calendrier, OCR, messagerie, notifications et collaboration applicative. \\
 \hline
 \end{tabularx}
 \end{table}
 
-\textbf{Synthèse :} les solutions existantes couvrent chacune un aspect partiel du suivi infantile. Aucune ne combine à la fois les courbes de croissance OMS, l'OCR médical, les alertes intelligentes et le suivi de grossesse dans une seule plateforme accessible et adaptée au contexte tunisien.
+\textbf{Synthèse :} ChildCare+ se positionne comme une solution intégrée pour
+le suivi pédiatrique familial. Sa valeur ajoutée réside dans la combinaison de la
+centralisation du dossier, des courbes OMS, des alertes explicables, de l'OCR
+contrôlé, du calendrier médical, du partage sélectif avec le médecin, des
+notifications et d'un assistant santé limité à l'explication des constats déjà
+validés par le système.
 
 % -------------------------------------------------------------------
 \section{Solution proposée}
 \label{sec:solution-proposee}
 
-Face à ces limitations, je propose \textbf{ChildCare+}, une plateforme web complète qui se distingue par :
+La solution proposée est une plateforme web composée de deux espaces :
 
 \begin{itemize}
-    \item Une \textbf{interface moderne et responsive} conçue avec React.js et Tailwind CSS, accessible depuis tout appareil.
-    \item Des \textbf{courbes de croissance interactives} basées sur les données de référence de l'OMS (poids, taille, IMC par âge et par sexe).
-    \item Un \textbf{moteur d'alertes} qui compare les mesures saisies aux seuils OMS et génère des notifications classifiées par sévérité (information, avertissement, danger).
-    \item Un \textbf{module OCR} pour numériser et extraire automatiquement les données depuis des documents médicaux photographiés.
-    \item Un \textbf{suivi de grossesse} intégré avec jalons hebdomadaires, suivi du poids maternel et de la fréquence cardiaque fœtale.
-    \item Une \textbf{architecture microservices} garantissant la modularité, la scalabilité et la maintenabilité du système.
+    \item \textbf{Espace parent :} gestion des enfants, mesures, courbes, alertes, constats cliniques, assistant santé, OCR, calendrier, notifications, partage avec médecins et messagerie.
+    \item \textbf{Espace médecin :} consultation des patients partagés, accès aux données autorisées, courbes, alertes, OCR, calendrier, messagerie et consultations par lien.
 \end{itemize}
 
-Le tableau~\ref{tab:comparaison-solution} positionne ChildCare+ par rapport aux solutions existantes.
+Sur le plan technique, la plateforme repose sur :
 
-\begin{table}[htbp]
-\centering
-\caption{Positionnement de ChildCare+ par rapport à l'existant}
-\label{tab:comparaison-solution}
-\begin{tabularx}{\textwidth}{|l|c|c|c|c|c|}
-\hline
-\textbf{Fonctionnalité} & \textbf{Baby Tracker} & \textbf{Growth Chart} & \textbf{Huckleberry} & \textbf{Carnet papier} & \textbf{ChildCare+} \\
-\hline
-Courbes OMS       & --  & \checkmark & --  & --  & \checkmark \\
-Multi-enfant      & \checkmark & --  & \checkmark & --  & \checkmark \\
-Alertes auto      & --  & --  & --  & --  & \checkmark \\
-OCR médical       & --  & --  & --  & --  & \checkmark \\
-Suivi grossesse   & --  & --  & --  & --  & \checkmark \\
-Gratuit           & --  & \checkmark & --  & \checkmark & \checkmark \\
-\hline
-\end{tabularx}
-\end{table}
+\begin{itemize}
+    \item un frontend React, Vite et Tailwind CSS 
+    \item des microservices Django REST Framework 
+    \item une base PostgreSQL par domaine 
+    \item Nginx comme passerelle API 
+    \item Docker Compose pour l'orchestration locale 
+    \item des jetons JWT pour l'authentification 
+    \item des permissions par partage pour les accès médecin 
+    \item un assistant IA basé sur Gemini Flash Lite, utilisé uniquement comme couche d'explication.
+\end{itemize}
 
 % -------------------------------------------------------------------
-\section{Méthodologie adoptée}
+\section{Méthodologie de travail}
 \label{sec:methodologie}
 
-Pour mener à bien ce projet, j'ai adopté la méthodologie agile \textbf{Scrum}, particulièrement adaptée aux projets de développement logiciel itératifs et incrémentaux.
+La réussite d'un projet logiciel dépend fortement de la méthode de travail
+adoptée. Une organisation claire, des cycles courts et des pratiques de
+validation régulières permettent d'améliorer la productivité, de réduire les
+risques et de créer un cadre favorable à l'innovation comme à la résolution des
+problèmes.
 
-\subsection{Principes de Scrum}
+Dans ce projet, la méthodologie retenue est une démarche \textbf{Agile Scrum}.
+Le développement a été découpé en itérations courtes, chacune aboutissant à un
+incrément observable : authentification, gestion des enfants, mesures, courbes,
+OCR, calendrier, collaboration médecin, notifications, audit puis assistant
+santé. Cette organisation a facilité l'adaptation du projet aux remarques
+reçues lors des tests et des réunions d'encadrement.
 
-Scrum repose sur les principes suivants :
-\begin{itemize}
-    \item \textbf{Itération :} le développement est organisé en \textit{sprints} de durée fixe (1 à 2 semaines dans mon cas).
-    \item \textbf{Incrémental :} chaque sprint produit un incrément fonctionnel du produit.
-    \item \textbf{Transparence :} l'avancement est visible à tout moment grâce au backlog de produit.
-    \item \textbf{Adaptation :} les priorités peuvent être réajustées à chaque sprint en fonction des retours.
-\end{itemize}
+Scrum a également permis de prioriser les fonctionnalités selon leur valeur
+pour la démonstration : les éléments essentiels ont été stabilisés avant
+d'ajouter les modules plus avancés. Les retours utilisateurs ont ainsi été
+intégrés progressivement, ce qui a aidé à corriger les incohérences, à améliorer
+les interfaces et à renforcer la sécurité sans attendre la fin du développement.
 
-\subsection{Organisation du projet en sprints}
-
-Le développement de ChildCare+ est organisé en sept phases principales, chacune correspondant à un ou plusieurs sprints :
-
-\begin{table}[htbp]
+\begin{figure}[htbp]
 \centering
-\caption{Planification des phases de développement}
-\label{tab:phases}
-\begin{tabularx}{\textwidth}{|c|X|c|}
-\hline
-\textbf{Phase} & \textbf{Description} & \textbf{État} \\
-\hline
-1 & Maquettes + diagrammes de séquence + MVP frontend (React, données simulées) & Réalisé \\
-\hline
-2 & Service d'authentification + service de profils (Django) & Prévu \\
-\hline
-3 & Service de mesures + service d'analyse + moteur d'alertes & Prévu \\
-\hline
-4 & Intégration du service OCR & Prévu \\
-\hline
-5 & Docker Compose + connexion frontend--backend & Prévu \\
-\hline
-6 & Service IA (moteur de règles $\rightarrow$ modèle prédictif) & Prévu \\
-\hline
-7 & Finalisation + tests + rapport + préparation de la soutenance & Prévu \\
-\hline
-\end{tabularx}
-\end{table}
-
-\subsection{Rôles Scrum dans le contexte du PFE}
-
-Dans le cadre de ce PFE, les rôles Scrum sont adaptés comme suit :
-\begin{itemize}
-    \item \textbf{Product Owner :} l'encadrant universitaire, qui valide les priorités et les livrables.
-    \item \textbf{Scrum Master et développeur :} l'étudiant, responsable de la planification, du développement et du suivi de l'avancement.
-\end{itemize}
+\includegraphics[width=0.78\textwidth]{agile_scrum.png}
+\caption{Méthodologie Agile Scrum}
+\label{fig:agile-scrum}
+\end{figure}
 
 % -------------------------------------------------------------------
 \section*{Conclusion}
-Ce chapitre a permis de situer le projet ChildCare+ dans son contexte, d'identifier clairement la problématique à résoudre et de définir les objectifs à atteindre. L'étude de l'existant a confirmé la pertinence de ma solution, qui se distingue par l'intégration de fonctionnalités complémentaires dans une plateforme unifiée. La méthodologie Scrum adoptée assure un développement structuré et adaptable. Le chapitre suivant présentera l'analyse détaillée des besoins et la spécification des cas d'utilisation.
+Ce chapitre a présenté le contexte, la problématique et les objectifs de ChildCare+. La solution proposée répond à un besoin de centralisation, de suivi, d'explication et de collaboration contrôlée autour de la santé de l'enfant. Le chapitre suivant détaille les besoins fonctionnels et non fonctionnels retenus.

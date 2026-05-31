@@ -1,74 +1,36 @@
 @startuml seq_auth
 !theme plain
-skinparam backgroundColor #FEFEFE
+skinparam backgroundColor #FFFFFF
 skinparam sequenceMessageAlign center
 skinparam responseMessageBelowArrow true
-skinparam maxMessageSize 200
+skinparam maxMessageSize 120
+skinparam shadowing false
 
-title Diagramme de Séquence 1 — Authentification Utilisateur (Inscription & Connexion)
+title Sequence - Authentification parent ou medecin
 
-actor "Parent" as User
-participant "Interface React\n(Frontend)" as UI
-participant "Serveur API\n(Backend)" as API
-database "Base de Données" as DB
-
-== Inscription ==
-
-User -> UI : Remplit le formulaire d'inscription\n(nom, email, mot de passe)
-UI -> UI : Validation côté client\n(champs requis, format email)
-
-alt Validation échouée
-    UI --> User : Affiche les erreurs de validation
-else Validation réussie
-    UI -> API : POST /api/auth/register\n{name, email, password}
-    API -> API : Hachage du mot de passe (bcrypt)
-    API -> DB : INSERT INTO users (name, email, password_hash)
-    
-    alt Email déjà utilisé
-        DB --> API : Erreur : email dupliqué
-        API --> UI : 409 Conflict\n{error: "Email déjà enregistré"}
-        UI --> User : Affiche "Ce compte existe déjà"
-    else Inscription réussie
-        DB --> API : Utilisateur créé (id)
-        API -> API : Génère JWT token
-        API --> UI : 201 Created\n{token, user}
-        UI -> UI : Stocke le token (localStorage)
-        UI --> User : Redirection vers le Dashboard
-    end
-end
-
-== Connexion ==
+actor "Utilisateur" as User
+participant "Frontend React" as UI
+participant "Nginx" as Nginx
+participant "Auth Service" as Auth
+database "auth_db" as DB
 
 User -> UI : Saisit email et mot de passe
-UI -> UI : Validation côté client\n(champs non vides)
-UI -> API : POST /api/auth/login\n{email, password}
-API -> DB : SELECT * FROM users\nWHERE email = ?
-    
-alt Utilisateur non trouvé
-    DB --> API : Résultat vide
-    API --> UI : 401 Unauthorized\n{error: "Identifiants invalides"}
-    UI --> User : Affiche "Email ou mot de passe incorrect"
-else Utilisateur trouvé
-    DB --> API : Données utilisateur (avec hash)
-    API -> API : Vérifie le mot de passe\n(bcrypt.compare)
-    
-    alt Mot de passe incorrect
-        API --> UI : 401 Unauthorized\n{error: "Identifiants invalides"}
-        UI --> User : Affiche "Email ou mot de passe incorrect"
-    else Mot de passe correct
-        API -> API : Génère JWT token
-        API --> UI : 200 OK\n{token, user}
-        UI -> UI : Stocke le token (localStorage)
-        UI -> UI : Vérifie 1ère connexion
-        
-        alt Première connexion
-            UI --> User : Affiche modale de disclaimer médical
-            User -> UI : Accepte le disclaimer
-            UI --> User : Redirection vers le Dashboard
-        else Connexion habituelle
-            UI --> User : Redirection vers le Dashboard
-        end
-    end
+UI -> Nginx : POST /api/auth/login/
+Nginx -> Auth : Transfert de la requete
+Auth -> DB : Chercher utilisateur par email
+
+alt Identifiants invalides
+  Auth --> UI : 401 erreur
+  UI --> User : Message d'erreur
+else Identifiants valides
+  Auth -> Auth : Genere access + refresh JWT
+  Auth --> UI : 200 {user, tokens}
+  UI -> UI : Stocke les tokens
+  alt role = parent
+    UI --> User : Redirection /dashboard
+  else role = doctor
+    UI --> User : Redirection /doctor/dashboard
+  end
 end
 
 @enduml

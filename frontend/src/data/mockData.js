@@ -1,4 +1,4 @@
-/* ─── Current User ─── */
+/* ─── Current User (Parent) ─── */
 export const currentUser = {
   id: 'parent-001',
   firstName: 'Asma',
@@ -7,6 +7,17 @@ export const currentUser = {
   phone: '+216 98 765 432',
   city: 'Sfax',
   avatar: null,
+};
+
+/* ─── Current Doctor (for doctor interface) ─── */
+export const currentDoctor = {
+  id: 'doc-001',
+  firstName: 'Hichem',
+  lastName: 'Trabelsi',
+  email: 'dr.trabelsi@clinique-sfax.tn',
+  phone: '+216 71 234 567',
+  specialty: 'Pédiatrie',
+  clinic: 'Clinique Les Oliviers, Sfax',
 };
 
 /* ─── Children ─── */
@@ -58,18 +69,18 @@ export const children = [
   },
 ];
 
-/* ─── Measurements ─── */
+/* ─── Measurements (with all supervisor-required fields) ─── */
 export const measurements = [
-  { id: 'm-001', childId: 1, date: '2026-02-25', weight: 10.6, height: 80, headCircumference: 47.1, notes: 'Bilan de routine' },
-  { id: 'm-002', childId: 2, date: '2026-02-22', weight: 14.1, height: 96, headCircumference: 50.0, notes: '' },
-  { id: 'm-003', childId: 3, date: '2026-02-20', weight: 18.7, height: 110, headCircumference: 52.4, notes: 'Visite annuelle' },
-  { id: 'm-004', childId: 1, date: '2026-02-18', weight: 10.4, height: 79.5, headCircumference: 47.0, notes: '' },
-  { id: 'm-005', childId: 1, date: '2026-01-20', weight: 10.1, height: 78.5, headCircumference: 46.8, notes: '' },
-  { id: 'm-006', childId: 1, date: '2025-12-15', weight: 9.7, height: 77, headCircumference: 46.5, notes: 'Controle pediatrique' },
-  { id: 'm-007', childId: 2, date: '2026-01-10', weight: 13.8, height: 95, headCircumference: 49.8, notes: '' },
-  { id: 'm-008', childId: 2, date: '2025-11-05', weight: 13.3, height: 93.5, headCircumference: 49.5, notes: '' },
-  { id: 'm-009', childId: 3, date: '2026-01-05', weight: 18.2, height: 109, headCircumference: 52.2, notes: '' },
-  { id: 'm-010', childId: 3, date: '2025-10-12', weight: 17.5, height: 107, headCircumference: 52.0, notes: '' },
+  { id: 'm-001', childId: 1, date: '2026-02-25', weight: 10.6, height: 80, headCircumference: 47.1, footSize: 10.5, earSize: 4.8, neckCircumference: 24.5, wristCircumference: 10.2, bmi: 16.6, source: 'manual', notes: 'Bilan de routine' },
+  { id: 'm-002', childId: 2, date: '2026-02-22', weight: 14.1, height: 96, headCircumference: 50.0, footSize: 14.2, earSize: 5.1, neckCircumference: 25.8, wristCircumference: 11.0, bmi: 15.3, source: 'manual', notes: '' },
+  { id: 'm-003', childId: 3, date: '2026-02-20', weight: 18.7, height: 110, headCircumference: 52.4, footSize: 17.0, earSize: 5.5, neckCircumference: 27.2, wristCircumference: 12.5, bmi: 15.5, source: 'manual', notes: 'Visite annuelle' },
+  { id: 'm-004', childId: 1, date: '2026-02-18', weight: 10.4, height: 79.5, headCircumference: 47.0, footSize: 10.4, earSize: 4.8, neckCircumference: 24.4, wristCircumference: 10.1, bmi: 16.5, source: 'manual', notes: '' },
+  { id: 'm-005', childId: 1, date: '2026-01-20', weight: 10.1, height: 78.5, headCircumference: 46.8, footSize: 10.3, earSize: 4.7, neckCircumference: 24.3, wristCircumference: 10.0, bmi: 16.4, source: 'manual', notes: '' },
+  { id: 'm-006', childId: 1, date: '2025-12-15', weight: 9.7, height: 77, headCircumference: 46.5, footSize: 10.1, earSize: 4.7, neckCircumference: 24.1, wristCircumference: 9.9, bmi: 16.4, source: 'manual', notes: 'Controle pediatrique' },
+  { id: 'm-007', childId: 2, date: '2026-01-10', weight: 13.8, height: 95, headCircumference: 49.8, footSize: 14.0, earSize: 5.0, neckCircumference: 25.6, wristCircumference: 10.9, bmi: 15.3, source: 'ocr', notes: '' },
+  { id: 'm-008', childId: 2, date: '2025-11-05', weight: 13.3, height: 93.5, headCircumference: 49.5, footSize: 13.8, earSize: 5.0, neckCircumference: 25.4, wristCircumference: 10.8, bmi: 15.2, source: 'manual', notes: '' },
+  { id: 'm-009', childId: 3, date: '2026-01-05', weight: 18.2, height: 109, headCircumference: 52.2, footSize: 16.8, earSize: 5.4, neckCircumference: 27.0, wristCircumference: 12.4, bmi: 15.3, source: 'manual', notes: '' },
+  { id: 'm-010', childId: 3, date: '2025-10-12', weight: 17.5, height: 107, headCircumference: 52.0, footSize: 16.5, earSize: 5.4, neckCircumference: 26.8, wristCircumference: 12.2, bmi: 15.3, source: 'manual', notes: '' },
 ];
 
 /* ─── Growth Chart Data (age in months -> value) ─── */
@@ -178,53 +189,35 @@ export const whoReferenceGirls = {
   ],
 };
 
-/* ─── Appointments ─── */
+/* ─── Appointments (enriched with status, doctor, notes) ─── */
 export const appointments = [
-  { id: 'apt-001', childId: 1, type: 'Pediatre', date: '2026-03-02', dateDisplay: '02 Mars', location: 'Cabinet Dr. Hichem Trabelsi' },
-  { id: 'apt-002', childId: 2, type: 'Vaccination', date: '2026-03-11', dateDisplay: '11 Mars', location: 'Centre de sante Sfax Ville' },
-  { id: 'apt-003', childId: 3, type: 'Bilan annuel', date: '2026-03-25', dateDisplay: '25 Mars', location: 'Cabinet Dr. Hichem Trabelsi' },
+  { id: 'apt-001', childId: 1, type: 'Pédiatre', date: '2026-03-02', dateDisplay: '02 Mars', location: 'Cabinet Dr. Hichem Trabelsi', status: 'scheduled', doctor: 'Dr. Hichem Trabelsi', notes: 'Bilan de 18 mois' },
+  { id: 'apt-002', childId: 2, type: 'Vaccination', date: '2026-03-11', dateDisplay: '11 Mars', location: 'Centre de santé Sfax Ville', status: 'scheduled', doctor: 'Dr. Amira Gharbi', notes: 'Rappel DTP + Polio' },
+  { id: 'apt-003', childId: 3, type: 'Bilan annuel', date: '2026-03-25', dateDisplay: '25 Mars', location: 'Cabinet Dr. Hichem Trabelsi', status: 'scheduled', doctor: 'Dr. Hichem Trabelsi', notes: '' },
+  { id: 'apt-004', childId: 1, type: 'Pédiatre', date: '2026-01-15', dateDisplay: '15 Jan', location: 'Cabinet Dr. Hichem Trabelsi', status: 'done', doctor: 'Dr. Hichem Trabelsi', notes: 'Contrôle de routine — RAS' },
+  { id: 'apt-005', childId: 2, type: 'Allergologue', date: '2025-12-10', dateDisplay: '10 Déc', location: 'Hôpital Habib Bourguiba', status: 'done', doctor: 'Dr. Karim Souissi', notes: 'Test allergie arachides confirmé' },
+  { id: 'apt-006', childId: 3, type: 'Dentiste', date: '2025-11-20', dateDisplay: '20 Nov', location: 'Cabinet dentaire Sfax', status: 'done', doctor: 'Dr. Nadia Mansour', notes: 'Premier contrôle dentaire' },
 ];
 
-/* ─── Alerts ─── */
+/* ─── Alerts (with title, severity, priority) ─── */
 export const alerts = [
-  { id: 1, childId: 1, child: 'Youssef', message: 'Rappel : vaccin ROR prevu le 02 mars.', type: 'info', date: "Aujourd'hui", read: false },
-  { id: 2, childId: 2, child: 'Meriem', message: 'Courbe de poids legerement sous le percentile attendu. Controle conseille.', type: 'warning', date: 'Hier', read: false },
-  { id: 3, childId: 1, child: 'Youssef', message: 'Prochain bilan de 18 mois a planifier.', type: 'info', date: 'Il y a 2 jours', read: true },
-  { id: 4, childId: 3, child: 'Aziz', message: 'Rappel : visite dentaire recommandee a partir de 5 ans.', type: 'info', date: 'Il y a 3 jours', read: true },
-  { id: 5, childId: 2, child: 'Meriem', message: 'Allergie aux arachides enregistree — verifiez les aliments donnes en creche.', type: 'warning', date: 'Il y a 5 jours', read: true },
+  { id: 1, childId: 1, child: 'Youssef', title: 'Rappel vaccination', message: 'Rappel : vaccin ROR prévu le 02 mars.', type: 'info', severity: 'info', priority: 'medium', date: "Aujourd'hui", read: false },
+  { id: 2, childId: 2, child: 'Meriem', title: 'Courbe de poids', message: 'Courbe de poids légèrement sous le percentile attendu. Contrôle conseillé.', type: 'warning', severity: 'warning', priority: 'high', date: 'Hier', read: false },
+  { id: 3, childId: 1, child: 'Youssef', title: 'Bilan à planifier', message: 'Prochain bilan de 18 mois à planifier.', type: 'info', severity: 'info', priority: 'low', date: 'Il y a 2 jours', read: true },
+  { id: 4, childId: 3, child: 'Aziz', title: 'Visite dentaire', message: 'Rappel : visite dentaire recommandée à partir de 5 ans.', type: 'info', severity: 'info', priority: 'low', date: 'Il y a 3 jours', read: true },
+  { id: 5, childId: 2, child: 'Meriem', title: 'Allergie enregistrée', message: 'Allergie aux arachides enregistrée — vérifiez les aliments donnés en crèche.', type: 'warning', severity: 'warning', priority: 'medium', date: 'Il y a 5 jours', read: true },
 ];
 
-/* ─── Pregnancy Tracking ─── */
-export const pregnancyData = {
-  isActive: true,
-  babyNickname: 'Bebe Nour',
-  dueDate: '2026-07-15',
-  currentWeek: 24,
-  trimester: 2,
-  entries: [
-    { id: 'p-001', week: 12, date: '2026-01-01', weight: 62.5, bloodPressure: '115/75', notes: 'Premiere echographie — tout normal', mood: 'happy' },
-    { id: 'p-002', week: 16, date: '2026-01-29', weight: 63.8, bloodPressure: '118/76', notes: 'Mouvements ressentis pour la premiere fois', mood: 'happy' },
-    { id: 'p-003', week: 20, date: '2026-02-05', weight: 65.2, bloodPressure: '120/80', notes: 'Echographie morphologique normale', mood: 'neutral' },
-    { id: 'p-004', week: 22, date: '2026-02-12', weight: 66.1, bloodPressure: '118/78', notes: 'Prise de fer prescrite', mood: 'neutral' },
-    { id: 'p-005', week: 24, date: '2026-02-26', weight: 67.0, bloodPressure: '122/80', notes: 'Test de glucose programme', mood: 'happy' },
-  ],
-  nextAppointment: { date: '2026-03-12', type: 'Suivi mensuel', location: 'Cabinet Dr. Amira Gharbi' },
-  tips: [
-    'Pensez a boire au moins 1.5L d\'eau par jour.',
-    'Faites une marche legere de 20 minutes quotidiennement.',
-    'Le test de glucose (HGPO) est prevu pour la semaine 26.',
-    'Commencez a preparer la liste de naissance si ce n\'est pas encore fait.',
-  ],
-};
-
-/* ─── Vaccinations ─── */
+/* ─── Vaccinations (enriched) ─── */
 export const vaccinations = [
-  { id: 'v-001', childId: 1, name: 'BCG', date: '2024-10-07', status: 'done' },
-  { id: 'v-002', childId: 1, name: 'Hepatite B (dose 1)', date: '2024-10-07', status: 'done' },
-  { id: 'v-003', childId: 1, name: 'DTP + Polio (dose 1)', date: '2024-12-05', status: 'done' },
-  { id: 'v-004', childId: 1, name: 'ROR', date: '2026-03-02', status: 'scheduled' },
-  { id: 'v-005', childId: 2, name: 'BCG', date: '2022-12-16', status: 'done' },
-  { id: 'v-006', childId: 2, name: 'DTP + Polio (rappel)', date: '2026-03-11', status: 'scheduled' },
+  { id: 'v-001', childId: 1, name: 'BCG', date: '2024-10-07', status: 'done', location: 'Maternité Sfax', doctor: 'Dr. Hichem Trabelsi', notes: '' },
+  { id: 'v-002', childId: 1, name: 'Hépatite B (dose 1)', date: '2024-10-07', status: 'done', location: 'Maternité Sfax', doctor: 'Dr. Hichem Trabelsi', notes: '' },
+  { id: 'v-003', childId: 1, name: 'DTP + Polio (dose 1)', date: '2024-12-05', status: 'done', location: 'Centre de santé Sfax', doctor: 'Dr. Hichem Trabelsi', notes: '' },
+  { id: 'v-004', childId: 1, name: 'ROR', date: '2026-03-02', status: 'scheduled', location: 'Cabinet Dr. Hichem Trabelsi', doctor: 'Dr. Hichem Trabelsi', notes: 'Première dose' },
+  { id: 'v-005', childId: 2, name: 'BCG', date: '2022-12-16', status: 'done', location: 'Maternité Sfax', doctor: 'Dr. Amira Gharbi', notes: '' },
+  { id: 'v-006', childId: 2, name: 'DTP + Polio (rappel)', date: '2026-03-11', status: 'scheduled', location: 'Centre de santé Sfax Ville', doctor: 'Dr. Amira Gharbi', notes: '' },
+  { id: 'v-007', childId: 3, name: 'BCG', date: '2020-11-24', status: 'done', location: 'Maternité Sfax', doctor: 'Dr. Hichem Trabelsi', notes: '' },
+  { id: 'v-008', childId: 3, name: 'Hépatite B (3 doses)', date: '2021-05-22', status: 'done', location: 'Centre de santé Sfax', doctor: 'Dr. Hichem Trabelsi', notes: 'Schéma complet' },
 ];
 
 /* ─── User Settings ─── */
@@ -232,9 +225,11 @@ export const userSettings = {
   notifications: true,
   emailAlerts: true,
   smsAlerts: false,
-  language: 'fr',
-  theme: 'light',
-  units: 'metric',
+  darkMode: false,
+  dataSharing: false,
+  language: 'Francais',
+  theme: 'Clair',
+  units: 'Metrique',
   reminderTime: '09:00',
   autoBackup: true,
 };
@@ -252,3 +247,42 @@ export const dashboardSummary = {
   nextAppointmentLabel: appointments[0].dateDisplay,
   nextAppointmentType: appointments[0].type,
 };
+
+/* ─── Doctors (for collaboration) ─── */
+export const doctors = [
+  { id: 'doc-001', firstName: 'Hichem', lastName: 'Trabelsi', specialty: 'Pédiatrie', phone: '+216 71 234 567', email: 'dr.trabelsi@clinique-sfax.tn', clinic: 'Clinique Les Oliviers, Sfax', status: 'active' },
+  { id: 'doc-002', firstName: 'Amira', lastName: 'Gharbi', specialty: 'Pédiatrie', phone: '+216 71 345 678', email: 'dr.gharbi@cabinet-sfax.tn', clinic: 'Cabinet Médical Gharbi, Sfax', status: 'active' },
+  { id: 'doc-003', firstName: 'Karim', lastName: 'Souissi', specialty: 'Allergologie pédiatrique', phone: '+216 71 456 789', email: 'dr.souissi@hopital-hb.tn', clinic: 'Hôpital Habib Bourguiba, Sfax', status: 'pending' },
+];
+
+/* ─── Sharing Permissions ─── */
+export const sharingPermissions = [
+  { id: 'sp-001', childId: 1, parentId: 'parent-001', doctorId: 'doc-001', accessCode: 'CCP-YOU-4821', allowedSections: ['growth', 'measurements', 'alerts', 'calendar', 'ocr'], hideDemographics: false, active: true, createdAt: '2026-01-10' },
+  { id: 'sp-002', childId: 2, parentId: 'parent-001', doctorId: 'doc-002', accessCode: 'CCP-MER-7293', allowedSections: ['growth', 'measurements', 'alerts'], hideDemographics: false, active: true, createdAt: '2026-01-15' },
+  { id: 'sp-003', childId: 2, parentId: 'parent-001', doctorId: 'doc-003', accessCode: 'CCP-MER-1045', allowedSections: ['alerts'], hideDemographics: true, active: true, createdAt: '2026-02-01' },
+];
+
+/* ─── Consultation Messages ─── */
+export const consultationMessages = [
+  { id: 'msg-001', senderId: 'parent-001', senderType: 'parent', receiverId: 'doc-001', childId: 1, content: 'Bonjour Docteur, Youssef a eu un peu de fièvre hier soir. Est-ce normal après le vaccin ?', timestamp: '2026-02-25T09:30:00', read: true },
+  { id: 'msg-002', senderId: 'doc-001', senderType: 'doctor', receiverId: 'parent-001', childId: 1, content: 'Bonjour Mme Ben Youssef, une légère fièvre après la vaccination est fréquente et bénigne. Donnez-lui du paracétamol adapté à son poids. Si la fièvre persiste plus de 48h, consultez.', timestamp: '2026-02-25T10:15:00', read: true },
+  { id: 'msg-003', senderId: 'parent-001', senderType: 'parent', receiverId: 'doc-001', childId: 1, content: 'Merci Docteur, c\'est rassurant. La fièvre est déjà tombée ce matin.', timestamp: '2026-02-25T14:00:00', read: true },
+  { id: 'msg-004', senderId: 'parent-001', senderType: 'parent', receiverId: 'doc-002', childId: 2, content: 'Docteur Gharbi, Meriem a vomi après avoir mangé des biscuits. Faut-il s\'inquiéter pour l\'allergie ?', timestamp: '2026-02-24T16:45:00', read: true },
+  { id: 'msg-005', senderId: 'doc-002', senderType: 'doctor', receiverId: 'parent-001', childId: 2, content: 'Vérifiez la composition des biscuits pour traces d\'arachides. Si les symptômes persistent, rendez-vous aux urgences. Sinon, surveillez-la pendant 24h.', timestamp: '2026-02-24T17:20:00', read: false },
+];
+
+/* ─── Doctor's Patients View (shared children visible to currentDoctor) ─── */
+export const doctorPatients = [
+  {
+    id: 1, childId: 1, childName: 'Youssef', parentName: 'Asma Ben Youssef',
+    age: '16 mois', sex: 'M', lastUpdate: '2026-02-25',
+    allowedSections: ['growth', 'measurements', 'alerts', 'calendar', 'ocr'],
+    alertStatus: 'none', riskLevel: 'low',
+  },
+  {
+    id: 2, childId: 3, childName: 'Aziz', parentName: 'Asma Ben Youssef',
+    age: '5 ans', sex: 'M', lastUpdate: '2026-02-20',
+    allowedSections: ['growth', 'measurements', 'alerts'],
+    alertStatus: 'info', riskLevel: 'low',
+  },
+];

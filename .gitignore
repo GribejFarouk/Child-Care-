@@ -8,6 +8,12 @@ dist-ssr/
 .vscode/
 .idea/
 *.log
+__pycache__/
+*.py[cod]
+*.sqlite3
+db.sqlite3
+.venv/
+venv/
 
 # PlantUML JAR
 plantuml.jar
@@ -27,3 +33,4 @@ GEMINI.md
 *.pdf
 !report/**/*.pdf
 !docs/**/*.pdf
+*.zip

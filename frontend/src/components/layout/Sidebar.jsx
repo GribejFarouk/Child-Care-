@@ -1,19 +1,33 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Users, Activity, Bell, Settings, X, Heart, LogOut, TrendingUp, Camera } from 'lucide-react';
+import { Home, Users, Bell, Settings, X, Heart, LogOut, TrendingUp, Camera, Calendar, Stethoscope, ClipboardList } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { currentUser } from '../../data/mockData';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
+  const firstName = user?.first_name || user?.firstName || 'Utilisateur';
+  const lastName = user?.last_name || user?.lastName || '';
+  const email = user?.email || '';
+  const initial = firstName.charAt(0).toUpperCase();
 
   const navItems = [
     { name: 'Tableau de bord', path: '/dashboard', icon: Home },
     { name: 'Enfants', path: '/children', icon: Users },
     { name: 'Courbes', path: '/growth', icon: TrendingUp },
-    { name: 'Suivi Grossesse', path: '/pregnancy', icon: Activity },
+    { name: 'Assistant Santé', path: '/assistant', icon: Heart },
+    { name: 'Calendrier', path: '/calendar', icon: Calendar },
+    { name: 'Médecins', path: '/collaboration', icon: Stethoscope },
     { name: 'Import OCR', path: '/ocr', icon: Camera },
     { name: 'Alertes', path: '/alerts', icon: Bell },
+    { name: 'Activité', path: '/activity', icon: ClipboardList },
     { name: 'Paramètres', path: '/settings', icon: Settings },
   ];
 
@@ -89,13 +103,21 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           <div className="flex items-center p-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer group"
             onClick={() => navigate('/settings')}>
             <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-sm font-bold shadow-sm flex-shrink-0">
-              {currentUser.firstName.charAt(0)}
+              {initial}
             </div>
             <div className="ml-3 flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">{currentUser.firstName} {currentUser.lastName}</p>
-              <p className="text-xs text-gray-400 truncate">{currentUser.email}</p>
+              <p className="text-sm font-semibold text-gray-900 truncate">{firstName} {lastName}</p>
+              <p className="text-xs text-gray-400 truncate">{email}</p>
             </div>
-            <LogOut className="h-4 w-4 text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0" />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleLogout();
+              }}
+              className="p-2 ml-1 rounded-lg text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition-colors flex-shrink-0"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </aside>

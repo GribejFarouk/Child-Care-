@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Plus, ChevronRight, Sparkles, Search, Filter } from 'lucide-react';
@@ -6,18 +6,82 @@ import GlassCard from '../../components/ui/GlassCard';
 import SectionHeader from '../../components/ui/SectionHeader';
 import AnimatedMetric from '../../components/ui/AnimatedMetric';
 import { staggerContainer, fadeUp } from '../../utils/motionPresets';
-import { children } from '../../data/mockData';
+import { listChildren } from '../../api/children';
+import { listMeasurements } from '../../api/measurements';
 
 export default function ChildrenListPage() {
   const navigate = useNavigate();
+  const [children, setChildren] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterSex, setFilterSex] = useState('all');
+
+  useEffect(() => {
+    const fetchChildren = async () => {
+      try {
+        const data = await listChildren();
+        // Fallback name mapping if the API returned first_name/last_name
+        const mappedData = data.map(c => ({
+          ...c,
+          name: c.first_name ? `${c.first_name} ${c.last_name || ''}`.trim() : c.name,
+        }));
+
+        const withLatestMeasurements = await Promise.all(
+          mappedData.map(async (child) => {
+            try {
+              const measurements = await listMeasurements(child.id);
+              const latest = [...(measurements || [])].sort(
+                (a, b) => new Date(b.date_recorded || b.date) - new Date(a.date_recorded || a.date)
+              )[0];
+
+              return {
+                ...child,
+                latestMeasurement: latest || null,
+              };
+            } catch (measurementError) {
+              console.error('Erreur lors du chargement des mesures', measurementError);
+              return { ...child, latestMeasurement: null };
+            }
+          })
+        );
+
+        setChildren(withLatestMeasurements);
+      } catch (err) {
+        setError('Erreur lors du chargement des enfants.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchChildren();
+  }, []);
 
   const filtered = children.filter((child) => {
     const matchesSearch = child.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesSex = filterSex === 'all' || child.sex === filterSex;
     return matchesSearch && matchesSex;
   });
+
+  const formatAge = (birthDate, fallbackAge) => {
+    if (fallbackAge) return fallbackAge;
+    const birth = new Date(birthDate);
+    const today = new Date();
+    if (Number.isNaN(birth.getTime())) return 'Age non renseigne';
+    let months = (today.getFullYear() - birth.getFullYear()) * 12 + (today.getMonth() - birth.getMonth());
+    if (today.getDate() < birth.getDate()) months -= 1;
+    if (months < 0) return 'Age non renseigne';
+    if (months < 24) return `${months} mois`;
+    const years = Math.floor(months / 12);
+    const remainingMonths = months % 12;
+    return remainingMonths ? `${years} ans ${remainingMonths} mois` : `${years} ans`;
+  };
+
+  const getMetricValue = (child, key) => {
+    const measurement = child.latestMeasurement;
+    if (!measurement) return null;
+    const value = measurement[key];
+    return value === null || value === undefined || value === '' ? null : Number(value);
+  };
 
   return (
     <motion.div className="max-w-6xl mx-auto" variants={staggerContainer} initial="hidden" animate="show">
@@ -26,7 +90,12 @@ export default function ChildrenListPage() {
         <p className="text-base text-gray-400 mt-1">Gerez les profils et suivez la croissance de vos enfants.</p>
       </motion.div>
 
-      {/* Search & Filter Bar */}
+      {loading && <div className="text-center py-10 text-gray-500">Chargement...</div>}
+      {error && <div className="text-center py-10 text-red-500">{error}</div>}
+
+      {!loading && !error && (
+        <>
+          {/* Search & Filter Bar */}
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 mb-8">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -63,7 +132,7 @@ export default function ChildrenListPage() {
             <div className="flex justify-between items-start mb-5">
               <div>
                 <h3 className="text-xl font-bold text-gray-900">{child.name}</h3>
-                <p className="text-sm font-medium text-gray-400 mt-0.5">{child.age} &middot; {child.sex === 'M' ? 'Garcon' : 'Fille'}</p>
+                <p className="text-sm font-medium text-gray-400 mt-0.5">{formatAge(child.date_of_birth || child.birthDate, child.age)} &middot; {child.sex === 'M' ? 'Garcon' : 'Fille'}</p>
               </div>
               <div className={`h-11 w-11 rounded-full flex items-center justify-center text-white font-bold text-base shadow-sm ${
                 child.sex === 'M'
@@ -73,25 +142,31 @@ export default function ChildrenListPage() {
                 {child.name.charAt(0)}
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-2 mb-5">
+            <div className="grid grid-cols-4 gap-2 mb-5">
               <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
                 <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Poids</p>
                 <div className="flex items-baseline space-x-0.5">
-                  <AnimatedMetric value={child.weight} />
+                  <AnimatedMetric value={getMetricValue(child, 'weight_kg')} emptyLabel="-" />
                   <span className="text-[10px] text-gray-400">kg</span>
                 </div>
               </div>
               <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
                 <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Taille</p>
                 <div className="flex items-baseline space-x-0.5">
-                  <AnimatedMetric value={child.height} />
+                  <AnimatedMetric value={getMetricValue(child, 'height_cm')} emptyLabel="-" />
                   <span className="text-[10px] text-gray-400">cm</span>
                 </div>
               </div>
               <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
-                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">PC</p>
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">IMC</p>
                 <div className="flex items-baseline space-x-0.5">
-                  <AnimatedMetric value={child.headCircumference} />
+                  <AnimatedMetric value={getMetricValue(child, 'bmi')} emptyLabel="-" />
+                </div>
+              </div>
+              <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Tete</p>
+                <div className="flex items-baseline space-x-0.5">
+                  <AnimatedMetric value={getMetricValue(child, 'head_circumference_cm')} emptyLabel="-" />
                   <span className="text-[10px] text-gray-400">cm</span>
                 </div>
               </div>
@@ -103,7 +178,9 @@ export default function ChildrenListPage() {
               </span>
             </div>
             <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-              <span className="text-xs text-gray-400">Mis a jour : {child.lastUpdate}</span>
+              <span className="text-xs text-gray-400">
+                Mis a jour : {child.latestMeasurement?.date_recorded ? new Date(child.latestMeasurement.date_recorded).toLocaleDateString('fr-FR') : 'Aucune mesure'}
+              </span>
               <span className="text-primary-500 text-sm font-semibold flex items-center group-hover:text-primary-600 transition-colors">
                 Voir <ChevronRight size={14} className="ml-0.5" />
               </span>
@@ -129,6 +206,8 @@ export default function ChildrenListPage() {
         <motion.div variants={fadeUp} className="text-center py-12">
           <p className="text-gray-400">Aucun enfant ne correspond a votre recherche.</p>
         </motion.div>
+      )}
+      </>
       )}
     </motion.div>
   );
